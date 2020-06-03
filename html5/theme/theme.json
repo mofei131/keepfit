@@ -1,0 +1,61 @@
+[{
+    "var":"--theme-color",
+    "name":"主题-颜色",
+    "describe":"头部导航栏背景色,tab页签标题颜色,整体的主题颜色。",
+    "value":"#1b3958"
+},{
+    "var":"--theme-color-hover",
+    "name":"主题-鼠标悬浮颜色",
+    "describe":"头部导航栏悬浮背景色,tab页签标题悬浮 选中颜色,整体的主题悬浮颜色。",
+    "value":"rgba(0,0,0,0.2)"
+},{
+    "var":"--theme-color-font",
+    "name":"主题-字体颜色",
+    "describe":"主题字体颜色。",
+    "value":"#a7b1c2"
+},{
+    "var":"--theme-color-font-active",
+    "name":"主题-选中字体颜色",
+    "describe":"主题选中字体颜色。",
+    "value":"rgba(10, 31, 51,0.9)"
+},{
+    "var":"--theme-color-left",
+    "name":"左边导航栏-颜色",
+    "describe":"左边导航栏颜色。",
+    "value":"rgba(10, 31, 51,0.9)"
+},{
+    "var":"--theme-color-left-active",
+    "name":"左边导航栏-选中颜色",
+    "describe":"左边导航栏选中颜色。",
+    "value":"rgba(255,255,255,0.15)"
+},{
+    "var":"--theme-color-left-font",
+    "name":"左边导航栏-字体颜色",
+    "describe":"左边导航栏字体颜色。",
+    "value":"#a7b1c2"
+},{
+    "var":"--theme-color-left-hover",
+    "name":"左边导航栏-悬浮字体颜色",
+    "describe":"左边导航栏悬浮字体颜色。",
+    "value":"rgba(255,255,255,0.15)"
+},{
+    "var":"--theme-color-left-font-active",
+    "name":"左边导航栏-选中字体颜色",
+    "describe":"左边导航栏选中字体颜色。",
+    "value":"#ffffff"
+},{
+    "var":"--win-title-color",
+    "name":"弹窗-标题背景色",
+    "describe":"弹窗标题背景色",
+    "value":"rgba(185, 204, 230, 0.6)"
+},{
+    "var":"--win-title-color-font",
+    "name":"弹窗-标题字体颜色",
+    "describe":"弹窗标题字体颜色",
+    "value":"blue"
+},{
+    "var":"--table-color",
+    "name":"子模块背景铯",
+    "describe":"子模块背景铯",
+    "value":"rgba(255,255,255,0.6)"
+}]
