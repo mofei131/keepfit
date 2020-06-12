@@ -1,0 +1,38 @@
+{
+  "localStorage": {
+    "app_user": {
+      "value": "",
+      "describe": "用户信息"
+    },
+    "app_module": {
+      "value": "",
+      "describe": "菜单模块"
+    },
+    "app_role": {
+      "value": "",
+      "describe": "登录角色"
+    },
+    "app_token": {
+      "value": "",
+      "describe": "token"
+    }
+  },
+  "Vuex": {
+    "app_user": {
+      "value": "{{app_user}}",
+      "describe": "用户信息"
+    },
+    "app_module": {
+      "value": "{{app_module}}",
+      "describe": "菜单模块"
+    },    
+    "app_role": {
+      "value": "{{app_role}}",
+      "describe": "登录角色"
+    },
+    "app_token": {
+      "value": "{{app_token}}",
+      "describe": "token"
+    }
+  }
+}

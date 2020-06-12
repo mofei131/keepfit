@@ -1,0 +1,302 @@
+body, html{
+  /* font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif; */
+  
+  font-family:"PingFang SC" !important; 
+  user-select:none; 
+  -webkit-tap-highlight-color: transparent;
+  padding-right: 0 !important; 
+  font-size: 0.3rem;
+  font-weight: 400;
+}
+#app{
+  width: 100%;
+  height: 100%;
+  
+}
+:root{
+    --theme-color: #1b3958;
+    --theme-color-hover: rgba(0,0,0,0.2);
+    --theme-color-font:#a7b1c2;
+    --theme-color-font-active:rgba(10, 31, 51,0.9);
+    --theme-color-left-active:rgba(255,255,255,0.15);
+    --theme-color-left: rgba(10, 31, 51,0.9);
+    --theme-color-left-font: #a7b1c2;
+    --theme-color-left-font-active: #ffffff;
+    --theme-color-left-hover:rgba(255,255,255,0.15);
+    --win-title-color:rgba(185, 204, 230, 0.6);
+    --win-title-color-font:blue;
+    --table-color:rgba(255,255,255,0.6);
+}
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video, input{
+  margin: 0;
+  padding: 0;
+  border: 0;
+  vertical-align: baseline;
+}
+html,body{
+  width: 100%;
+  height: 100%;
+}
+
+p,ul,table,h1,h2,h3,h4,h5{
+  -webkit-margin-before:0em;
+  -webkit-margin-after: 0em;
+  -webkit-margin-start: 0px;
+  -webkit-margin-end: 0px;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, menu, nav, section{
+  display: block;
+}
+
+blockquote, q{
+  quotes: none;
+}
+
+blockquote:before, blockquote:after,
+q:before, q:after{
+  content: none;
+}
+table{
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+a{
+  color: #7e8c8d;
+  /* -webkit-backface-visibility: hidden; */
+  text-decoration: none;
+}
+li{
+  list-style: none;
+}
+strong,b{
+    font-weight: bold !important;
+}
+body{
+  -webkit-text-size-adjust: none;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+ ::-webkit-scrollbar {
+   width: 5px;
+   height: 5px;
+ }
+ ::-webkit-scrollbar-track {
+   border-radius: 5px;
+   background-color: rgba(44, 198, 245,0.1);
+ }
+
+ ::-webkit-scrollbar-thumb {
+   border-radius: 5px;
+   background-color: rgba(44, 198, 245,0.5);
+ } 
+
+*{
+  -webkit-overflow-scrolling: touch;
+}
+
+.tab-iframe .el-tabs__content{
+  width: 100%;
+  height: calc(100% - 35px);
+}
+
+.img-view .van-slider__button{
+  border: 0.04rem solid #FB9B06;
+  width: 0.34rem !important;
+  height: 0.34rem !important;
+  box-shadow: 0 0px 0px rgba(0,0,0,0) !important;
+}
+
+/* .img-view .van-slider:after{
+  content: " ";
+  display: block;
+  width: 100%;
+  height: 0.78rem;
+  background: linear-gradient(180deg,rgba(251, 155, 6, 0.15), rgba(255, 255,255, 1));
+} */
+/* .img-view-sleep .van-slider:after{
+  content: " ";
+  display: block;
+  width: 100%;
+  height: 0.78rem;
+  background: linear-gradient(180deg,rgba(170, 0, 152, 0.15), rgba(255, 255,255, 1));
+} */
+.img-view-sleep .van-slider__button{
+  border: 0.04rem solid #AA0098;
+  width: 0.34rem !important;
+  height: 0.34rem !important;
+  box-shadow: 0 0px 0px rgba(0,0,0,0) !important;
+}
+
+.slider-view-ing .van-slider__button{
+  display: none;
+}
+.van-cell__title{
+  display: flex;
+  align-items: center;
+}
+.van-cell{
+  border-top: 0.11rem solid #E5E5E5 !important;
+}
+.custom-title{
+  color:#252525;
+  font-size: 0.38rem;
+}
+.van-cell--clickable{
+  display: flex;
+  align-items: center;
+}
+.van-icon{
+  color: #808080 !important;
+  font-size: 0.45rem !important;
+  font-weight: bold;
+}
+.van-cell__title{
+  flex: 3 !important;
+}
+.van-cell__value{
+  flex: 1 !important;
+}
+.slider-code .van-slider__button{
+  width: 0.22rem;
+  height: 0.43rem;
+  box-sizing: border-box;
+  border: 2px solid #fff;
+  background: #5C73FF;
+  border-radius: 0.2rem;
+}
+.slider-code  .van-slider--disabled{
+  opacity: 1;
+}
+.slider-code .van-slider{
+  background: linear-gradient(
+    90deg,rgba(172, 0, 154, 1) 0%,
+    rgba(172, 0, 154, 1) 20%, 
+    #1b00af 30%,
+    #1b00af 100%);
+} 
+.slider-code .van-slider__bar{
+  background-color: transparent;
+}
+
+
+.list-li{
+  width: 1.2rem;
+  background: #fff;
+  min-height: 2rem;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 0);
+  top: 1rem;
+  border-radius: 10px;
+  padding:10px 10px;
+}
+.list-li::before{
+  content: " ";
+  display: block;
+  border-left: 0.2rem solid transparent;
+  border-right: 0.2rem solid transparent;
+  border-bottom: 0.3rem solid #fff;
+  width: 0.01rem;
+  position: absolute;
+  left: calc(50% - 0.2rem);
+  top: -0.2rem;    
+}
+
+.list-li div{
+  font-size:0.37rem;
+  color:#000000;
+  line-height:0.75rem;
+  text-align:center;
+  border-top:1px solid #A0A0A0;
+}
+.list-li div:first-child{
+  border-top: 0px !important;
+}
+.action{
+  background: #FB9B06 !important;
+  color: #fff !important;
+  border-top: 0px !important;
+}
+.van-tag--default{
+  background-color: #fff !important;
+}
+
+
+
+
+.wh_top_changge li{
+  height: 0.67rem !important;
+  color: #262626 !important;
+}
+.wh_item_date,.wh_top_tag{
+  width: 0.7rem !important;
+  height:0.7rem !important;
+  line-height: 0.7rem !important;
+}
+.wh_content_item{
+  height:0.7rem !important;
+}
+.wh_content_item .wh_other_dayhide, .wh_content_item .wh_want_dayhide{
+  color: #999999a6 !important;
+  font-size: 0.3rem !important;
+}
+.wh_content_item, .wh_content_item_tag{
+  font-size: 0.3rem !important;
+  color: #262626 !important;
+}
+.wh_content_li,.wh_content_all{
+  background-color:#FFF !important;
+  border-radius: 0.2rem;
+  padding-bottom:0;
+}
+
+.wh_jiantou1{
+  border-top: 2px solid #262626  !important;
+  border-left: 2px solid #262626  !important;
+  width: 0.18rem !important;
+  height: 0.18rem !important;
+}
+
+.wh_jiantou2{
+  border-top: 2px solid #262626  !important;
+  border-right: 2px solid #262626  !important;
+  width: 0.18rem !important;
+  height: 0.18rem !important;
+}
+
+.wh_content_li{
+  color: #000000  !important;
+  font-size: 0.35rem !important;
+  font-weight: 500 !important;
+}
+.wh_content_item .wh_isToday{
+  background-color: #FB9B06 !important;
+  color: #fff;
+  font-size: 0.3rem !important;
+  opacity: 0.5;
+}
+.wh_content_item .wh_chose_day{
+  background-color: #FB9B06 !important;
+  color: #fff;
+  font-size: 0.3rem !important;
+}
+
+
+
+
+
+
+
