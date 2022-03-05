@@ -5,7 +5,7 @@
       <span v-if="timeList[value]">{{timeList[value].slice(5, 11)}}</span>
     </div>
     <div class="page-step">
-      <span class="page-step-1">{{util.second_host(resultList[value])[0]}}<span>小时</span>{{util.second_host(resultList[value])[1]}}<span>分钟</span></span>
+      <span class="page-step-1">{{util.second_host(resultList[value])[0]}}<span>{{lang.hours}}</span>{{util.second_host(resultList[value])[1]}}<span>{{lang.minutes}}</span></span>
     </div>
     <div class="img-view">
       <div class="img-echart">
@@ -71,6 +71,7 @@
 import opt from "../../../components/echart/echart_sleepMonth";
 import myDate from "../../../components/calendar";
 export default {
+    name:"refurbish",
   components: {myDate},
   data() {
     return {
@@ -144,11 +145,11 @@ export default {
     },
      select(index){
       if(index==1&&this.index!=1){          
-          this.$router.push({ path: "/sleepDay" });
+          this.$router.push({ path: "/sleepDay?lang="+this.$route.query.lang });
       }else if(index==2&&this.index!=2){
-          this.$router.push({ path: "/sleepWeek" });
+          this.$router.push({ path: "/sleepWeek?lang="+this.$route.query.lang });
       }else if(index==3&&this.index!=3){
-          this.$router.push({ path: "/sleepMonth" });
+          this.$router.push({ path: "/sleepMonth?lang="+this.$route.query.lang });
       }
     },
     ckRight(){

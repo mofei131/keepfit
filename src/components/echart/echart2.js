@@ -73,11 +73,14 @@ module.exports = {
         type: 'bar',
         barGap: '-100%',
         z: 1,
-        data: [0, 0, 0, 0, 0, 0, 0],
+        data: [],
         barWidth: 10,
+        barMinHeight: 8,  
         itemStyle: {
             color: function(params){
-                console.log( window.curInt)
+                if(params.value===0||!params.value){
+                    return '#ffffff00'
+                }
                 if(params.dataIndex == window.curInt){
                     return '#FB9C09'
                 }else{

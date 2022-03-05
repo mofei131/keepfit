@@ -6,8 +6,9 @@
         <van-collapse-item
           v-for="(item,key,index) in dataList"
           :key="index"
-          :title="key.slice(5, 10).replace('-','月')+'日'"
+          :title="dateTime"
           :name="key"
+          class="aa_aa"
         >
           <div class="heart-view-2" v-for="(it,i) in item" :key="i">
             <div>
@@ -15,92 +16,65 @@
               <span class="heart-view-span-2">{{lang.spoTip1}}</span>
             </div>
             <span class="heart-view-span-3">             
-              {{util.dateFormat(it.createTime,"HH:mm")}}
+             {{it.createTime.slice(11,16)}}
             </span>
           </div>
-          <div v-if="item.length==0"> <van-empty image="error" :description="key+' 无历史数据'" /> </div>
+          <div v-if="item.length==0"> <van-empty description="暂 无 数 据 生 成"  :image="errorImage" /> </div>
         </van-collapse-item>
       </van-collapse>
     </div>
-    <v-screen ref="screen" index="1" @select="select"></v-screen>
+   <my-date class="my-date" ref="myDate" @clickDay="clickDay" v-show="myDateState"></my-date>
   </div>
 </template>
 <script>
+import myDate from "../../../components/calendar";
 export default {
-  components: {},
-  data() {
+   components: {myDate},
+   data() {
     return {
       activeName: "",
       currentPage: 1,
-      pageSize: 50,
-      type: 1,
+      pageSize: 50,  
+      myDateState: false,    
       resultList: [],
-      dataList: null
+      dataList: null,
+      dateTime:"",
     };
   },
   methods: {
-    select(index) {
-      this.type = index;
-      if (index == 1) {
-        this.getDayData(this.util.dateFormat("", "YYYY-MM-DD"),0);
-      } else if (index == 2) {
-        this.getDayData(this.util.dateFormat("", "YYYY-MM-DD"),0);
-      } else if (index == 3) {
-        this.getDayData(this.util.dateFormat("", "YYYY-MM-DD"),0);
-      }
+      clickDay(data){           
+        this.dateTime = data.replace("-","年").replace("-","月")+"日"
+        this.change(data)
     },
     ckRight() {
-      this.$refs.screen.open();
+      this.myDateState = true;
     },
     change(val) {
       if(val){
-        if(!this.dataList[val].length){
-         this.getDayData(val,1);
+        if(!this.dataList[val]?.length){
+         this.getDayData(val);
         }
       }
     },
-    getDayData(opt_date,state) {
+    getDayData(opt_date) {
       this.Http(this.api["BloodOxygenDay"], {
         currentPage: this.currentPage,
         pageSize: this.pageSize,
         dateString: opt_date
       }).then(res => {
         if (res.data.code == "000") {
-          this.activeName = opt_date;
-          this.resultList = res.data.result.list;
-          if(state==0){
+            this.activeName = opt_date;
+            this.resultList = res.data.result.list;
             this.dataList = new Object();
-          }
-          if (this.type == 1) {
-            // 日
             this.dataList[opt_date] = this.resultList;
-          } else if (this.type == 2) {
-            // 周
-            if(state==0){
-              let week = this.util.WeekDate();
-              for (let i = 0; i < week.length; i++) {
-                this.dataList[week[i]] = [];
-              }
-            }
-            this.dataList[opt_date] = this.resultList;
-            this.dataList = JSON.parse(JSON.stringify(this.dataList))
-          } else if (this.type == 3) {
-            if(state==0){
-              let week = this.util.MonthDate();
-              for (let i = 0; i < week.length; i++) {
-                this.dataList[week[i]] = [];
-              }
-            }
-            this.dataList[opt_date] = this.resultList;
-            this.dataList = JSON.parse(JSON.stringify(this.dataList))
-          }
         }
       });
     }
   },
   created() {},
   mounted() {
-    this.select(1);
+     this.getDayData(this.util.dateFormat("", "YYYY-MM-DD"))
+      this.dateTime = this.util.dateFormat("", "YYYY-MM-DD").replace("-","年").replace("-","月")+"日"
   }
 };
 </script>

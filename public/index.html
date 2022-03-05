@@ -3,18 +3,30 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta    http-equiv="Pragma" content="no-cache">
+    <meta    http-equiv="Cache-Control" content="no-cache">
+    <meta    http-equiv="Expires" content="0">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
     <script>
-        window.apis = "http://180.76.100.217:8090"
-        window.ip_ = location.origin + location.pathname +"#/" // "http://localhost:8080/#/"
+     //  window.apis = "http://180.76.100.217:8090"
+     //  window.apis = "http://106.53.230.244/api"
+       //window.apis = "http://106.53.230.244:8090"
+
+
+        window.apis = "http://8.140.158.108:5912"
+        window.ip_ = location.origin + location.pathname +"#/" 
+        // 版本号勿删
+        console.log("2021-07-27 @ Version 1.2.0 修改 1:深睡,2:浅睡,0:清醒")
+      
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+     <!-- <script src="https://cdn.jsdelivr.net/npm/eruda"></script>  -->
+    <script src="./md5.js"></script>
     <title><%= htmlWebpackPlugin.options.title %></title>
   </head>
   <body>
     <div id="app"></div>
  
   </body>
-  <!-- <script>eruda.init();</script> -->
+   <!-- <script>eruda.init();</script>  -->
 </html>

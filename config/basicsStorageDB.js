@@ -12,15 +12,13 @@ export const setBasicsDB = function (key, v) {
 
 export const getBasicsDB = function (key) {
   var val = localStorage.getItem(key)
-  try {
-    if (JSON.parse(val)) {
-      return JSON.parse(val)
-    } else {
-      return val
-    }
-  } catch (e) {
-
-  }
+  // try(){
+  //   if (JSON.parse(val)) {
+  //     return JSON.parse(val)
+  //   } else {
+  //     return val
+  //   }
+  // }
   if(val=="null"){
     return null
   }

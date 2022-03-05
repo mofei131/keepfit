@@ -1,21 +1,24 @@
 <template>
     <div class="page-view">
-        <my-head-one :name="`${util.dateFormat('','年月日')}`" @ckLeft="closePage" @ckRight="openPage('historyHeartRate')" :type=3></my-head-one>
-        <div class="ring-1">
+        <my-head-one :name="`${util.dateFormat('','年月日')}`" @ckLeft="closePage" @ckRight="openPage('historyHeartRate')" :type='3'></my-head-one>
+        <div :class="{'ring-1':stateIng,'ring-1_':!stateIng}">
             <div class="ring-view">
-                <div class="ring-view-image"><img src="../../../assets/image/heartRate1.gif"></div>
+                <div class="ring-view-image">
+                    <img v-show="stateIng" src="../../../assets/image/heartRate1.gif">
+                    <img v-show="!stateIng" src="../../../assets/image/heartRate1_.png">
+                </div>
                 <div class="ring-view-1">{{value}}</div>
                 <div class="ring-view-2">{{lang.sequence}}/{{lang.minutes}}</div> 
             </div>
         </div>
-        <van-cell value="" is-link @click="openPage('setUp')">
+        <!-- <van-cell value="" is-link @click="openPage('setUp')">
             <template #title>
                 <van-tag style="background-color: transparent;">
                 <img  class="mubiaoset" src="../../../assets/image/set.png">
                 </van-tag>
                 <span class="custom-title">{{lang.heatTip1}}</span>
             </template>
-        </van-cell>
+        </van-cell> -->
         <div class="heart-view" v-for="(item,key,index) in dataList" :key="index">
             <div class="heart-view-1">{{key}}</div>
             <div class="heart-v">
@@ -24,10 +27,12 @@
                         <span class="heart-view-span-1">{{it.frequency}}</span>
                         <span class="heart-view-span-2">{{lang.sequence}}/{{lang.minutes}}</span>
                     </div>
-                    <span class="heart-view-span-3">{{util.dateFormat(it.createTime,"HH:mm")}}</span>
+                    <span class="heart-view-span-3">{{it.createTime.slice(11,16)}}</span>
                 </div>    
             </div>
         </div>
+        <div v-if="Object.keys(dataList).length==0" class="heart-view"> 
+            <van-empty :description="lang.shujunull"  :image="errorImage" /> </div>
         <div class="view-fixed">
             <div class="view-fixed-but-1" @click="add(1)">{{lang.heatTip3}} </div>
             <div class="view-fixed-line"></div>
@@ -36,58 +41,44 @@
     </div>
 </template>
 <script>
+
 export default {
     name:"refurbish",
     components:{},
     data() {
         return {
+            stateIng:false,
             resultList:[],
-            dataList:null,
+            dataList:{},
             value:"--",
             currentPage:1,
         }
     },
     methods: {       
         getDayData(data) { // 获取今日 测量的最新数据
+        let that = this
             this.Http(this.api["HeartRateDay"], {
                 currentPage: this.currentPage,
                 dateString:data
             }).then(res => {
                 if (res.data.code == "000") {
-                    this.resultList = res.data.result.list
-                    this.dataList = new Object()
-                    if(this.resultList.length>0){
-                        this.dataList[this.util.dateFormat("","月日")] = this.resultList    
-
-                        this.value = this.resultList[0].frequency
+                    that.resultList = res.data.result.list
+                    that.dataList = {}
+                    if(that.resultList.length>0){
+                        that.dataList[that.util.dateFormat("","月日")] = that.resultList    
+                        that.value = that.resultList[0].frequency
                     }
                 }
             });
         }, 
         add(index){
+            this.value = "--"
             this.$toast.loading({
                 duration: 3, // 持续展示 toast
                 forbidClick: true,
                 message: this.lang.wdTip8,
             });
-            /*
-            this.Http(this.api["HeartRateSave"], 
-               [{
-                    "createTime": this.util.dateFormat("","YYYY-MM-DD HH:mm:ss"),
-                    "frequency":Number( "3" + (Math.random()*10).toFixed(1))                
-                }]
-            ).then(res => {
-                this.$toast.clear()
-                if(res.data.code == "000")
-                this.getDayData(this.util.dateFormat("","YYYY-MM-DD"))
-               
-            })
-            if(index==2){
-                setTimeout(()=>{
-                    this.add(1)
-                },5000)
-            }
-            */
+            this.stateIng = true
             if(index==1){// 心率单次测量
                 window.pushApp.heartRateSingle.func()
             }else{ // 心率连续测量
@@ -96,20 +87,49 @@ export default {
         }
     },created(){
        
-    },mounted () {     
+    },mounted () {  
+        console.log('节点')
+        console.log(this.util.dateFormat("","YYYY-MM-DD HH:mm:ss"))
         this.getDayData(this.util.dateFormat("","YYYY-MM-DD")) 
-        let that =  this
+        let that =  this    
         window.pushApp.heartRateSingle.callback = (data)=>{
-            that.$dialog.alert({
-                title: '心率单次测量结果',
-                message: data,
-            })
+            that.value = data
+            alert('接口调用之前')
+            console.log("单次测量结果 : " + data)     
+            // that.Http(that.api["HeartRateSave"], 
+            //    [{
+            //         "createTime": that.util.dateFormat("","YYYY-MM-DD HH:mm:ss"),
+            //         "frequency":data
+            //     }]
+            // ).then(res => {
+            //     alert('接口调用之后')
+            //     that.$toast.clear()
+            //     that.stateIng = false
+            //     if(res.data.code == "000"){
+            //         that.getDayData(that.util.dateFormat("","YYYY-MM-DD"))
+            //     }
+            // })
+            // return -1
+            this.getDayData(this.util.dateFormat("","YYYY-MM-DD")) 
+            return data
         }
-        window.pushApp.heartRateContinuation.callback = (data)=>{
-            that.$dialog.alert({
-                title: '心率连续测量结果',
-                message: data,
-            })
+
+        window.pushApp.heartRateContinuation.callback = (data)=>{    
+            that.value = data
+            console.log("连续测量结果 : " + data)        
+            // that.Http(that.api["HeartRateSave"], 
+            //    [{
+            //         "createTime": that.util.dateFormat("","YYYY-MM-DD HH:mm:ss"),
+            //         "frequency":data               
+            //     }]
+            // ).then(res => {
+            //     that.$toast.clear()
+            //     that.stateIng = false
+            //     if(res.data.code == "000"){
+            //         that.getDayData(that.util.dateFormat("","YYYY-MM-DD"))
+            //     }
+            // })
+             this.getDayData(this.util.dateFormat("","YYYY-MM-DD")) 
         }
     }
 }
@@ -119,6 +139,16 @@ export default {
     width:4.92rem;
     height:4.92rem;
     background:url("../../../assets/image/heartRate.gif");
+    background-size: 100% 100%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.ring-1_{
+    width:4.92rem;
+    height:4.92rem;
+    background:url("../../../assets/image/heartRate_.png");
     background-size: 100% 100%;
     margin: 0 auto;
     display: flex;

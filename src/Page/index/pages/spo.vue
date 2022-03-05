@@ -1,10 +1,13 @@
 <template>
     <div class="page-view">
-        <my-head-one :name="`${util.dateFormat('','年月日')}`" @ckLeft="closePage" @ckRight="openPage('historySpo')" :type=3></my-head-one>
-        <div class="ring-1">
+        <my-head-one :name="`${util.dateFormat('','年月日')}`" @ckLeft="closePage" @ckRight="openPage('historySpo')" :type="3"></my-head-one>
+        <div :class="{'ring-1':stateIng,'ring-1_':!stateIng}">
             <div class="ring-2">
                 <div class="ring-view">
-                    <div class="ring-view-image"><img src="../../../assets/image/spo1.gif"></div>
+                    <div class="ring-view-image">
+                        <img v-show="stateIng" src="../../../assets/image/spo1.gif">
+                        <img v-show="!stateIng" src="../../../assets/image/spo1_.png">
+                    </div>
                     <div class="ring-view-1">{{value}}</div>
                     <div class="ring-view-2">{{lang.spoTip1}}</div> 
                 </div>
@@ -29,10 +32,11 @@
                         <span class="heart-view-span-1">{{it.saturate}}</span>
                         <span class="heart-view-span-2">{{lang.spoTip1}}</span>
                     </div>
-                    <span class="heart-view-span-3">{{util.dateFormat(it.createTime,"HH:mm")}}</span>
+                    <span class="heart-view-span-3">{{it.createTime.slice(11,16)}}</span>
                 </div>      
             </div>     
         </div>
+         <div v-if="dataList&&Object.keys(dataList).length==0" class="heart-view"> <van-empty description="暂 无 数 据 生 成"  :image="errorImage" /></div>
         <div class="view-fixed">
             <div class="view-fixed-but-1"  @click="add()">{{lang.bloodTip3}} </div>           
         </div>
@@ -43,6 +47,7 @@ export default {
     components:{},
     data() {
         return {
+           stateIng:false,
            resultList:[],
            dataList:null,
            maxSaturate:"--",
@@ -70,11 +75,14 @@ export default {
             });
         },
         add(){
+            this.value = "--";
             this.$toast.loading({
                 duration: 3, // 持续展示 toast
                 forbidClick: true,
                 message: this.lang.wdTip8,
             });
+            this.stateIng = true
+            
             /*
             this.Http(this.api["BloodOxygenSave"], 
                [{
@@ -85,24 +93,34 @@ export default {
                 this.$toast.clear()
                 if(res.data.code == "000")
                  this.getDayData(this.util.dateFormat("","YYYY-MM-DD"))
-               
             })*/
             window.pushApp.spoSingle.func()
+            
         },
         ckRight(){
            this.$router.push({ path: "/historySpo" });
         }      
     },created(){
        
-    },mounted () {     
+    },mounted () {   
         this.getDayData(this.util.dateFormat("","YYYY-MM-DD"))     
-        let that =  this
-        window.pushApp.spoSingle.callback = (data)=>{
-            that.$dialog.alert({
-                title: '血氧测量结果',
-                message: data,
-            })
-        }
+        let that =  this        
+        window.pushApp.spoSingle.callback = (data)=>{   
+            console.log("血痒测量结果 : " + data)      
+            that.getDayData(that.util.dateFormat("","YYYY-MM-DD"))     
+            // that.Http(that.api["BloodOxygenSave"], 
+            //    [{
+            //         "createTime": that.util.dateFormat("","YYYY-MM-DD HH:mm:ss"),
+            //         "saturate":data
+            //     }]
+            // ).then(res => {
+            //     that.$toast.clear()
+            //     that.stateIng = false
+            //     if(res.data.code == "000"){
+            //         that.getDayData(that.util.dateFormat("","YYYY-MM-DD"))
+            //     }
+            // })
+        }       
     }
 }
 </script>
@@ -111,6 +129,16 @@ export default {
     width:4.92rem;
     height:4.92rem;
     background:url("../../../assets/image/spo.gif");
+    background-size: 100% 100%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.ring-1_{
+    width:4.92rem;
+    height:4.92rem;
+    background:url("../../../assets/image/spo_.png");
     background-size: 100% 100%;
     margin: 0 auto;
     display: flex;

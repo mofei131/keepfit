@@ -1,6 +1,6 @@
 <template>
   <div class="page-view">
-    <my-head :name="dateTime"  @ckLeft="closePage"  @clickConten="clickConten" @ckRight="ckRight" :type="1"></my-head>
+    <my-head :name="lang.headDay"  @ckLeft="closePage"  @clickConten="clickConten" @ckRight="ckRight" :type="1"></my-head>
     <div class="page-time">
       <span>{{timeList[value]}}</span>
     </div>
@@ -51,8 +51,8 @@
       </div>
     </div>
     <div class="slider-view-ing">
-      <img src="../../../assets/image/run.png" :style="{'left':(value1-2)+'%'}" class="run-image" />
-      <img src="../../../assets/image/p.png" v-if="value1!=100" class="p-image" />
+      <img src="../../../assets/image/run.png" :style="{'left':(value1>100?100:value1)+'%'}" class="run-image" />
+      <img src="../../../assets/image/p.png" v-if="value1<100" class="p-image" />
       <van-slider
         disabled
         v-model="value1"
@@ -64,7 +64,7 @@
     <div class="wc-view">
       <div class="wc-view-1">
         <div class="wc-view-a">{{lang.tip1}}</div>
-        <div class="wc-view-b">{{value1}}%</div>
+        <div class="wc-view-b">{{value1_}}%</div>
         <div class="wc-view-c">{{lang.percentage}}</div>
       </div>
       <div class="wc-view-2"></div>
@@ -76,7 +76,7 @@
         <div class="wc-view-c">{{lang.tip3}}</div>
       </div>
     </div>
-    <van-cell value is-link>
+    <van-cell value is-link @click="openNavigator">
       <template #title>
         <van-tag style="background-color: transparent;">
           <img class="mubiaoset" src="../../../assets/image/mubiaoSet.png" />
@@ -84,36 +84,51 @@
         <span class="custom-title">{{lang.tip4}}</span>
       </template>
     </van-cell>
-    <van-cell value>
+    <!-- <van-cell value>
       <template #title>
         <van-tag style="background-color: transparent;">
           <img class="mubiaoset" src="../../../assets/image/share.png" />
         </van-tag>
         <span class="custom-title">{{lang.tip5}}</span>
       </template>
-    </van-cell>   
-    <v-screen ref="screen" index=1 @select="select"></v-screen>
+    </van-cell>    -->
+    <v-screen ref="screen" index=1 @select="select"></v-screen> 
     <my-win v-show="myWinState"></my-win>
-    <my-date @clickDay="clickDay" v-show="myDateState"></my-date>
+    <my-date ref="myDate" @clickDay="clickDay" v-show="myDateState"></my-date>
   </div>
 </template>
 <script>
 import opt from "../../../components/echart/echart";
 import myWin from "../../../components/guideMap";
 import myDate from "../../../components/calendar";
+// var jsos_ = {
+// 	result: {
+// 		obj: {
+// 			stepNum: 47192,
+// 			burnCalorie: 1048,
+// 			distance: 113.0,
+// 			continueDay: 2,
+// 			maxContinueDay: 3,
+// 			percent: 100
+// 		},
+// 		list: [915, 959, 950, 975, 963, 904, 9710, 959, 956, 933, 932, 945, 944, 9310, 983, 9210, 912, 937, 941, 963, 992, 916, 983, 911]
+// 	}
+// }
 let dd_ = [
   "00:00 - 01:00","01:00 - 02:00","02:00 - 03:00","03:00 - 04:00","04:00 - 05:00","05:00 - 06:00",
   "06:00 - 07:00","07:00 - 08:00","08:00 - 09:00","09:00 - 10:00","10:00 - 11:00","11:00 - 12:00",
   "12:00 - 13:00","13:00 - 14:00","14:00 - 15:00","15:00 - 16:00","16:00 - 17:00","17:00 - 18:00",
   "18:00 - 19:00","19:00 - 20:00","20:00 - 21:00","21:00 - 22:00","22:00 - 23:00","23:00 - 00:00"];
 export default {
-  components: { myWin, myDate},
-  data() {
+    name:"refurbish",
+    components: { myWin, myDate},
+    data() {
     return {
-      dateTime:window.lang.headDay,
+      // dateTime:window.lang.headDay,
       timeList:dd_,
       value: 12,
       value1: 0,
+      value1_:0,
       myChart:null,
       myDateState: false,
       myWinState: false,
@@ -133,23 +148,20 @@ export default {
     }
   },
   methods: {
-      lessValue(){
-          if(this.value>0){
-            this.value = this.value - 1;
-          }else{
-            this.value  = 23
-          }
-         
+      openNavigator(){
+          window.pushApp.openNavigator.func("setTarget")
       },
-      addValue(){
-          if(this.value<23){
-            this.value = this.value + 1;
-          }else{
-            this.value  = 0
-          }
-         
+      lessValue(){          
+         this.$refs.myDate.lessD()
+      },
+      addValue(){         
+         this.$refs.myDate.addD()
       },
      getDayData(opt_date) {
+        if(opt_date==this.util.dateFormat("", "YYYY-MM-DD")){            
+            window.pushApp.todaySteps.func();
+            return ;
+        }
         this.Http(this.api["StepDay"], {
           currentPage: this.currentPage,
           pageSize: this.pageSize,
@@ -158,10 +170,15 @@ export default {
           if (res.data.code == "000") {
               this.resultList = res.data.result.list??[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
               this.dataObj = res.data.result.obj??null
-              this.value1 = this.dataObj?.percent || 0
+              this.value1_ = this.dataObj?.percent || 0
+              this.value1 = (this.dataObj?.percent || 0)>100?100:(this.dataObj?.percent || 0)
               opt.series[0].data = this.resultList
+              console.log(opt);
               this.myChart.setOption(opt)
           }
+          setTimeout(() => {
+                this.myChart.resize();
+            }, 100);
         })
     },
     clickConten() {
@@ -169,6 +186,7 @@ export default {
     },
     clickDay(data){
       this.dateTime = data.replace("-","年").replace("-","月")+"日"
+      // this.dateTime = data.replace("-",window.lang.year).replace("-",window.lang.month)+window.lang.day
       this.getDayData(data)
     },
     addData(dayHour){
@@ -186,12 +204,13 @@ export default {
         })
     },
     select(index) {
+        console.log(this.$route.query.lang)
       if (index == 1 && this.index != 1) {
-        this.$router.push({ path: "/hStepsDay" });
+        this.$router.push({ path: "/hStepsDay?lang="+this.$route.query.lang });
       } else if (index == 2 && this.index != 2) {
-        this.$router.push({ path: "/hStepsWeek" });
+        this.$router.push({ path: "/hStepsWeek?lang="+this.$route.query.lang });
       } else if (index == 3 && this.index != 3) {
-        this.$router.push({ path: "/hStepsMonth" });
+        this.$router.push({ path: "/hStepsMonth?lang="+this.$route.query.lang });
       }
     },
     ckRight() {
@@ -203,7 +222,7 @@ export default {
       document.getElementById("code-echart-day")
     );
     this.myChart.setOption(opt);
-    this.getDayData(this.util.dateFormat("", "YYYY-MM-DD"))
+    // this.getDayData(this.util.dateFormat("", "YYYY-MM-DD"))
     if(localStorage.userIndex!=1){
         this.myWinState = true;
     }
@@ -223,6 +242,28 @@ export default {
         dataIndex: this.value 
       });
     },1000)
+    let that = this;  
+    setTimeout(() => {
+        window.pushApp.todaySteps.callback = (data)=>{  
+            console.log("todaySteps结果 : " + data)
+            let jsos_ = JSON.parse(data)            
+            that.resultList = jsos_["result"]["list"]??[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+            that.dataObj = jsos_["result"]["obj"]??null
+            that.value1_ = that.dataObj?.percent || 0
+            that.value1 = (that.dataObj?.percent || 0)>=100?100:(that.dataObj?.percent || 0)
+            opt.series[0].data = that.resultList
+            that.myChart.setOption(opt) 
+            setTimeout(() => {
+                that.myChart.resize();
+            }, 100);
+            
+        } 
+        console.log("调用 todaySteps :等待结果.... ")
+        window.pushApp.todaySteps.func()
+    },200)
+
+   
+   
       // for(let i =1;i<=24;i++){
       //   this.addData(i)
       // }
@@ -356,6 +397,7 @@ export default {
   position: relative;
   padding-bottom: 8px;
   box-sizing: border-box;
+ //-moz-animation-timing-function  overflow: hidden;
 }
 
 .run-image {
@@ -367,7 +409,7 @@ export default {
 .p-image {
   position: absolute;
   width: 0.23rem;
-  left: 99%;
+  right: 0%;
   top: 0.02rem;
 }
 

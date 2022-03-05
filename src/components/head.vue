@@ -1,8 +1,11 @@
 <template>
     <div class="page-head">
-        <div>
-            <img v-if="leftIcon!=1" @click="ckLeft" class="head-left" src="../assets/image/x.png">
-            <img v-if="leftIcon==1" @click="ckLeft" class="head-left-1" src="../assets/image/back.png">
+        <div @click="ckLeft" style="box-sizing: border-box;
+    padding: 5px 10px 0 2px;
+    width: 25px;
+    height: 30px;">
+            <img v-if="leftIcon!=1"  class="head-left" src="../assets/image/fanhui.png">
+            <img v-if="leftIcon==1"  class="head-left-1" src="../assets/image/back.png">
         </div>
         <div @click="conten">
             <span v-if="type==1" class="head-name-day">{{name}}</span>
@@ -11,9 +14,9 @@
             <span v-if="type==4"  class="head-name">{{name}}</span>
             <img  v-if="type!=4" class="head-conten" src="../assets/image/v.png">
         </div>
-        <div @click="ckRight">
+        <div @click="ckRight" style="padding: 0.513rem;">
             <slot name="right">
-                <img v-if="rightIcon!='false'" class="head-right" src="../assets/image/<>.png">
+                <img v-if="rightIcon!='false'" class="head-right" src="../assets/image/set.png">
             </slot>
         </div>
     </div>
@@ -50,10 +53,10 @@ export default {
     display:flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0  0.513rem;
+    padding: 0 0 0 0.513rem;
 }
 .head-left{
-    width:0.366rem;
+    width:0.45rem;
 }
 .head-left-1{
     width:0.31rem;

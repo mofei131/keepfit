@@ -3,9 +3,9 @@
         <div class="wrapper" @click.stop>
             <div class="widows">
                 <div class="list-li">
-                    <div @click="select('日',1)" :class="{'action':index_==1}">日</div>
-                    <div @click="select('周',2)" :class="{'action':index_==2}">周</div>
-                    <div @click="select('月',3)" :class="{'action':index_==3}">月</div>                       
+                    <div @click="select('日',1)" :class="{'action':index_==1}">{{lang.day}}</div>
+                    <div @click="select('周',2)" :class="{'action':index_==2}">{{lang.week}}</div>
+                    <div @click="select('月',3)" :class="{'action':index_==3}">{{lang.month}}</div>                       
                 </div>
             </div>
         </div>
@@ -42,8 +42,8 @@ export default {
 </script>
 <style scoped lang="stylus" rel="stylesheet/stylus">
 .list-li {
-  width: 0.7rem !important;
+  width: 1.2rem !important;
   transform: translate(0, 0) !important;
-  left: calc(100% - 1.4rem) !important;
+  left: calc(100% - 1.6rem) !important;
 }
 </style>

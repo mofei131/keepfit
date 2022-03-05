@@ -293,6 +293,30 @@ body{
   color: #fff;
   font-size: 0.3rem !important;
 }
+.view-fixed{
+    z-index: 99;
+}
+.wh_isMark{
+    background-color: #FB9B06 !important;
+    color: #fff;
+    font-size: 0.3rem !important;
+}
+
+.van-empty__image img,.van-empty__image{
+    height:auto !important;
+}
+
+.my-date  .calendar-win::before{
+    left: auto !important;
+    right: 2px !important;
+}
+
+.aa_aa .van-collapse-item__wrapper{
+    border-top:10px solid #E6E6E6;
+}
+.van-collapse-item__content{
+    padding: 6px 12px !important;
+}
 
 
 

@@ -43,7 +43,7 @@
             </template>
           </van-cell>
           <div v-if="item.length==0">
-            <van-empty image="error" :description="key+' 无历史数据'" />
+            <van-empty description="暂 无 数 据 生 成"  :image="errorImage" />
           </div>
         </van-collapse-item>
       </van-collapse>

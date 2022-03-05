@@ -1,7 +1,7 @@
 <template>
   <div class="page-view">
     <my-head-one :name="`${lang.ecgTip1}`"  @ckLeft="closePage" @ckRight="openPage('historyEcg')" :type="3"></my-head-one>
-    <div class="ring-1">
+    <div class="ring-1" :class="{'ring-1':stateIng,'ring-1_':!stateIng}">
         <div class="ring-view">
           <div class="ring-view-0">{{lang.ecgTip2}}</div>
           <div class="ring-view-1">{{value}}</div>
@@ -48,11 +48,12 @@ export default {
       this.showState = false;
     },
     add(frequency,healthIndex){
-        this.$toast.loading({
-            duration: 3, // 持续展示 toast
-            forbidClick: true,
-            message: this.lang.wdTip8,
-        });
+        // this.$toast.loading({
+        //     duration: 3, // 持续展示 toast
+        //     forbidClick: true,
+        //     message: this.lang.wdTip8,
+        // });
+        //this.stateIng = true
         this.Http(this.api["EcgSave"], 
           [{
                 "createTime": this.util.dateFormat("","YYYY-MM-DD HH:mm:ss"),
@@ -62,8 +63,9 @@ export default {
             }]
         ).then(res => {
             this.$toast.clear()
-            if(res.data.code == "000")
+            if(res.data.code == "000"){
             this.getDayData(this.util.dateFormat("","YYYY-MM-DD"))
+            }
           
         })
     },
@@ -105,21 +107,17 @@ export default {
         var k = 0;
         window.pushApp.ecgSingle.func()
         window.fk = setInterval(() => {
-          
-          if (k < 50) {
+          if (k < 50 && this.stateIng) {
             yAxisData.push(Math.round(Math.random() * 1000));
             if (yAxisData.length > 20) {
               yAxisData.shift();
             }
             myChart.setOption(Option);
             this.stateIng = true;
-          } else if (k == 50) {          
+          } else{          
             this.showState = true;
             this.stateIng = false;
-            this.frequency = Number( "9" + (Math.random()*10).toFixed(0));
-            this.healthIndex =Number((Math.random()*100).toFixed(0));
-            this.value = this.frequency
-           
+            window.clearInterval(window.fk);
            // this.add(this.frequency,this.healthIndex)
           }
           k++;
@@ -132,11 +130,19 @@ export default {
   mounted() {
     window.fk = "";
     let that =  this
-    window.pushApp.ecgSingle.callback = (data)=>{
-        that.$dialog.alert({
-            title: '心电图测量结果',
-            message: data,
-        })
+     window.pushApp.ecgSingle.callback = (data)=>{
+        console.log("测量结果 : " + data)
+        if(data.indexOf(",")!=-1){
+            that.frequency = data.split(",")[0];
+            that.healthIndex = data.split(",")[1];
+            that.value = that.frequency
+            that.add(that.frequency,that.healthIndex)
+        }else{
+            that.$dialog.alert({
+                title: 'data',
+                message: "数据格式 frequency,healthIndex 如 '120,80' ",
+            })
+        }
     }
   //  this.value = 89
   }
@@ -147,6 +153,17 @@ export default {
     width:4.92rem;
     height:4.92rem;
     background:url("../../../assets/image/heartRate.gif");
+    background-size: 100% 100%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.ring-1_ {
+    width:4.92rem;
+    height:4.92rem;
+    background:url("../../../assets/image/heartRate_.png");
     background-size: 100% 100%;
     margin: 0 auto;
     display: flex;

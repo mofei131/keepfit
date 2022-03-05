@@ -86,9 +86,13 @@ module.exports = {
         type: 'bar',
         // label:{show:true,position:'top'},
         data: [], 
+        barMinHeight: 8,
         barWidth: 4,
         itemStyle:{
         color: function(params){
+            if(params.value===0||!params.value){
+                return '#ffffff00'
+            }
             if(params.dataIndex == window.curInt){
                 return '#A90097'
             }else{

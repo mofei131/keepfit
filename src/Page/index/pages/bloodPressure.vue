@@ -1,9 +1,12 @@
 <template>
     <div class="page-view">
-        <my-head-one :name="`${util.dateFormat('','年月日')}`" @ckLeft="closePage"  @ckRight="openPage('historyBloodPressure')" :type=3></my-head-one>
-        <div class="ring-1">           
+        <my-head-one :name="`${util.dateFormat('','年月日')}`" @ckLeft="closePage"  @ckRight="openPage('historyBloodPressure')" :type="3"></my-head-one>
+        <div :class="{'ring-1':stateIng,'ring-1_':!stateIng}">           
             <div class="ring-view">
-                <div class="ring-view-image"><img src="../../../assets/image/bloodPressure1.gif"></div>
+                <div class="ring-view-image">
+                    <img v-show="stateIng" src="../../../assets/image/bloodPressure1.gif">
+                    <img v-show="!stateIng" src="../../../assets/image/bloodPressure1.png">
+                </div>
                 <div class="ring-view-1">{{value}}</div>
                 <div class="ring-view-2">{{lang.bloodTip1}}</div> 
             </div>           
@@ -28,6 +31,7 @@
                 </div>
             </div>           
         </div>
+         <div v-if="Object.keys(dataList).length==0" class="heart-view"> <van-empty :description="lang.shujunull"  :image="errorImage" /> </div>
         <div class="view-fixed">
             <div class="view-fixed-but-1"  @click="add()">{{lang.bloodTip3}} </div>           
         </div>
@@ -38,8 +42,9 @@ export default {
     components:{},
     data() {
         return {
+           stateIng:false,
            resultList:[],
-           dataList:null,
+           dataList:{},
            diastolicPressure:"00",
            systolicPressure:"00",
            value:"--",
@@ -54,7 +59,7 @@ export default {
             }).then(res => {
                 if (res.data.code == "000") {
                     this.resultList = res.data.result.list
-                    this.dataList = new Object()
+                    this.dataList = {}
                     if(this.resultList.length>0){
                         this.dataList[this.util.dateFormat("","月日")] = this.resultList                 
                         this.value = this.resultList[0].diastolicPressure+"/"+this.resultList[0].systolicPressure
@@ -62,31 +67,16 @@ export default {
                 }
             });
         },
-         add(){
-
+        add(){
+            this.value = "--";
             this.$toast.loading({
                 duration: 3, // 持续展示 toast
                 forbidClick: true,
                 message: this.lang.wdTip8,
             });
-            /*
-            this.diastolicPressure = Number("9" + (Math.random()*10).toFixed(0))
-            this.systolicPressure = Number("3" + (Math.random()*10).toFixed(0))
-            this.value = this.diastolicPressure + "/" + this.systolicPressure
-            this.Http(this.api["BloodPressureSave"], 
-               [{
-                    "createTime": this.util.dateFormat("","YYYY-MM-DD HH:mm:ss"),
-                    "diastolicPressure":this.diastolicPressure,
-                    "systolicPressure":this.systolicPressure                  
-                }]
-            ).then(res => {
-                this.$toast.clear()
-                if(res.data.code == "000")
-                this.getDayData(this.util.dateFormat("","YYYY-MM-DD"))
-               
-            })
-            */
-           window.pushApp.bloodPressureSingle.func()
+            this.stateIng = true
+            window.pushApp.bloodPressureSingle.func()
+            
         },  
     },created(){
        
@@ -94,10 +84,33 @@ export default {
         this.getDayData(this.util.dateFormat("","YYYY-MM-DD"))
         let that =  this
         window.pushApp.bloodPressureSingle.callback = (data)=>{
-            that.$dialog.alert({
-                title: '血压测量结果',
-                message: data,
-            })
+             console.log("血压测量结果 : " + data)
+            if(data.indexOf(",")!=-1){
+                that.diastolicPressure = data.split(",")[0]
+                that.systolicPressure = data.split(",")[1]
+                that.value = data.split(",")[0] + "/" + data.split(",")[1]
+                //刷新数据
+                this.getDayData(this.util.dateFormat("","YYYY-MM-DD"))
+                // that.Http(that.api["BloodPressureSave"], 
+                // [{
+                //         "createTime": that.util.dateFormat("","YYYY-MM-DD HH:mm:ss"),
+                //         "diastolicPressure":data.split(",")[0],
+                //         "systolicPressure":data.split(",")[1],    
+                //     }]
+                // ).then(res => {
+                //     that.$toast.clear()
+                //     that.stateIng = false
+                //     if(res.data.code == "000"){
+                //         that.getDayData(that.util.dateFormat("","YYYY-MM-DD"))
+                //     }
+                // })
+            }else{
+                that.stateIng = false
+                that.$dialog.alert({
+                    title: data,
+                    message: "数据格式 'diastolicPressure,systolicPressure' 如 '120,60' ",
+                })
+            }
         }
     }
 }
@@ -107,6 +120,16 @@ export default {
     width:4.92rem;
     height:4.92rem;
     background:url("../../../assets/image/bloodPressure.gif");
+    background-size: 100% 100%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.ring-1_{
+    width:4.92rem;
+    height:4.92rem;
+    background:url("../../../assets/image/bloodPressure_.png");
     background-size: 100% 100%;
     margin: 0 auto;
     display: flex;

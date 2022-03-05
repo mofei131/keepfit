@@ -94,12 +94,7 @@ module.exports = {
         Url:API_BASE_URL+"/sport/queryWeekRecords",
         path:"",
         Method:"post"
-    },
-    SportMonth:{ //运动历史数据月
-        Url:API_BASE_URL+"/sport/queryMonthRecords",
-        path:"",
-        Method:"post"
-    },    
+    },     
     StepSave:{
         Url:API_BASE_URL+"/health/step/batchSave",      
         Method:"post"
@@ -149,7 +144,24 @@ module.exports = {
         Url:API_BASE_URL+"/sport/saveRunning",      
         Method:"post"
     },
-
-    // 跑步
-
+    SaveSport:{  //保存运动数据数据
+        Url:API_BASE_URL+"/sport/save",      
+        Method:"post"
+    },
+    SportQueryMonth:{ //查询有数据的月份
+        Url:API_BASE_URL+"/sport/queryMonth",
+        path:"",
+        Method:"post"
+    }, 
+    SportMonth:{ //运动历史数据月
+        Url:API_BASE_URL+"/sport/queryMonthRecords",
+        path:"",
+        Method:"post"
+    }, 
+    SportQueryTotal:{ //查询数据总和：总步数、总的运动距离、总时长、总消耗热量
+        Url:API_BASE_URL+"/sport/queryTotal",
+        path:"",
+        Method:"post"
+    },  
+    
 }

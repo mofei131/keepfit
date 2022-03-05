@@ -1,3 +1,5 @@
+
+
 module.exports = {
   //  backgroundColor: 'rgba(0,0,0,0)',
     grid:{
@@ -91,9 +93,12 @@ module.exports = {
         // label:{show:true,position:'top'},
         data: [], 
         barWidth: 14,
+        barMinHeight: 8,   
         itemStyle:{
-            color: function(params){
-                console.log( window.curInt)
+            color: function(params){               
+                if(params.value===0||!params.value){
+                    return '#ffffff00'
+                }
                 if(params.dataIndex == window.curInt){
                     return '#FB9C09'
                 }else{
@@ -104,15 +109,10 @@ module.exports = {
                     }
                 }
             },
-            normal: {
-                barBorderRadius: [30,30,0,0]
-            }
+            barBorderRadius:   [30,30,0,0],
+              
+          
         }, 
-        /* markLine : {
-             data : [
-                  {name: '两个坐标之间的标线',yAxis: 0},
-             ]
-         }*/
     }]
 };
 

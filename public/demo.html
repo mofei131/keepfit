@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name='apple-mobile-web-app-capable' content='yes'>
+<meta name='apple-mobile-web-app-status-bar-style' content='black'>
+<script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+<style>
+    * {
+        margin: 0;
+        font-size: 20px;
+    }
+
+    html,
+    body {
+        font-size: 20px;
+        margin: 10px;
+        padding: 0 0 20px 0;
+    }
+</style>
+
+<head>
+    <meta charset="UTF-8">
+    <title>app与H5接口定义测试</title>
+</head>
+
+<body>
+    <div class="keyboard" id="app">
+        <div>
+            <button type="button" onClick="pushApp.heartRateSingle.func()">心率单次-测量</button>
+        </div>
+        <div>
+            <button type="button" onClick="pushApp.heartRateContinuation.func()">心率连续测量</button>
+        </div>
+        <div>
+            <button type="button" onClick="pushApp.bloodPressureSingle.func()">血压单次测量</button>
+        </div>
+        <div>
+            <button type="button" onClick="pushApp.spoSingle.func()">血氧单次测量</button>
+        </div>
+        <div>
+            <button type="button" onClick="pushApp.temperatureSingle.func()">体温测量</button>
+        </div>
+        <div>
+            <button type="button" onClick="pushApp.roomTemperatureSingle.func()">室温测量</button>
+        </div>
+        <div>
+            <button type="button" onClick="pushApp.ecgSingle.func()">心电图测量</button>
+        </div>
+        <div>
+            <button type="button"
+                onClick="pushApp.heartRateSetUp.func({realTime:false,staticState:true,timing:true})">心率定时测量设置</button>
+        </div>
+        <div>
+            <button type="button"
+                onClick="pushApp.todaySteps.func('')">今日步数数据</button>
+        </div>
+        <div>
+            <button type="button"
+                onClick="pushApp.todaySleep.func('')">今日睡眠数据</button>
+        </div>
+        <div>
+            <button type="button" onClick="pushApp.closePage.func()">关闭当前页面</button>
+        </div>
+        <div>
+            <button type="button" onClick="pushApp.openPage.func('https://www.baidu.com')">打开新页面</button>
+        </div>
+        <div>
+            <button type="button" onClick="pushApp.openNavigator.func('setTarget')">原生页面打开发方式 openNavigator 传入值 setTarget 打开目标设定</button>
+        </div>
+    </div>
+</body>
+<script>
+    u = navigator.userAgent
+    isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1; //如果输出结果是true就判定是android终端或者uc浏览器
+    window.pushApp = {
+        heartRateSingle: {  // 心率单次测量
+            func: function () {
+                try {
+                    if (!isAndroid) {
+
+                        window.webkit.messageHandlers.heartRateSingle.postMessage({})
+                    } else {
+                        window.webkit.heartRateSingle("Hello Android!");
+                    }
+                } catch (error) { console.log(error) }
+            },
+            callback: function (data) {
+                console.log("H5得到APP心率单次测量结果 : " + JSON.stringify(data))
+            }
+        },
+        heartRateContinuation: { // 心率连续测量
+            func: function () {
+                try {
+                    if (!isAndroid) {
+                        window.webkit.messageHandlers.heartRateContinuation.postMessage({})
+                    } else {
+                        window.webkit.heartRateContinuation("Hello Android!");
+                    }
+                } catch (error) { console.log(error) }
+            },
+            callback: function (data) {
+                console.log("H5得到APP心率连续测量结果 : " + JSON.stringify(data))
+            }
+        },
+        bloodPressureSingle: { // 血压单次测量
+            func: function () {
+                try {
+                    if (!isAndroid) {
+                        window.webkit.messageHandlers.bloodPressureSingle.postMessage({})
+                    } else {
+                        window.webkit.bloodPressureSingle("Hello Android!");
+                    }
+                } catch (error) { console.log(error) }
+            },
+            callback: function (data) {
+                console.log("H5得到APP血压单次测量结果 : " + JSON.stringify(data))
+            }
+        },
+        spoSingle: { // 血氧单次测量
+            func: function () {
+                try {
+                    if (!isAndroid) {
+                        window.webkit.messageHandlers.spoSingle.postMessage({})
+                    } else {
+                        window.webkit.spoSingle("Hello Android!");
+                    }
+                } catch (error) { console.log(error) }
+            },
+            callback: function (data) {
+                console.log("H5得到APP血氧单次测量结果 : " + JSON.stringify(data))
+            }
+        },
+        temperatureSingle: { // 体温测量
+            func: function () {
+                try {
+                    if (!isAndroid) {
+                        window.webkit.messageHandlers.temperatureSingle.postMessage({})
+                    } else {
+                        window.webkit.temperatureSingle("Hello Android!");
+                    }
+                } catch (error) { console.log(error) }
+            },
+            callback: function (data) {
+                console.log("H5得到APP体温测量结果 : " + JSON.stringify(data))
+            }
+        },
+        roomTemperatureSingle: { // 室温测量
+            func: function () {
+                try {
+                    if (!isAndroid) {
+                        window.webkit.messageHandlers.roomTemperatureSingle.postMessage({})
+                    } else {
+                        window.webkit.roomTemperatureSingle("Hello Android!");
+                    }
+                } catch (error) { console.log(error) }
+            },
+            callback: function (data) {
+                console.log("H5得到APP室温测量结果 : " + JSON.stringify(data))
+            }
+        },
+        ecgSingle: { // 心电图测量
+            func: function () {
+                try {
+                    if (!isAndroid) {
+                        window.webkit.messageHandlers.ecgSingle.postMessage({})
+                    } else {
+                        window.webkit.ecgSingle("Hello Android!");
+                    }
+                } catch (error) { console.log(error) }
+            },
+            callback: function (data) {
+                console.log("H5得到APP心电图测量结果 : " + JSON.stringify(data))
+            }
+        },
+        heartRateSetUp: { //心率定时测量设置
+            func: function (obj) {
+                try {
+                    if (!isAndroid) {
+                        window.webkit.messageHandlers.heartRateSetUp.postMessage(obj)
+                    } else {
+                        window.webkit.heartRateSetUp(obj);
+                    }
+                } catch (error) { console.log(error) }
+            },
+            callback: function (data) {
+                console.log("H5得到APP设置结果 : " + JSON.stringify(data))
+            }
+        },
+        todaySteps: { // 今日步数数据
+            func: function (obj) {
+                try {
+                    if (!isAndroid) {
+                        window.webkit.messageHandlers.todaySteps.postMessage(obj)
+                    } else {
+                        window.webkit.todaySteps(obj);
+                    }
+                } catch (error) { console.log(error) }
+            },
+            callback: function (data) {
+                console.log("H5得到APP设置结果 : " + JSON.stringify(data))
+            }
+        },
+        todaySleep: { // 今日睡眠数据
+            func: function (obj) {
+                try {
+                    if (!isAndroid) {
+                        window.webkit.messageHandlers.todaySleep.postMessage(obj)
+                    } else {
+                        window.webkit.todaySleep(obj);
+                    }
+                } catch (error) { console.log(error) }
+            },
+            callback: function (data) {
+                console.log("H5得到APP设置结果 : " + JSON.stringify(data))
+            }
+        },
+        closePage: { //关闭当前窗口
+            func: function () {
+                try {
+                    if (!isAndroid) {
+                        window.webkit.messageHandlers.closePage.postMessage({})
+                    } else {
+                        window.webkit.closePage({});
+                    }
+                } catch (error) { console.log(error) }
+            },
+            callback: function (data) {
+                console.log("关闭窗口 : " + JSON.stringify(data))
+            }
+        },
+        openPage: {
+            func: function (url) {
+                try {
+                    if (!isAndroid) {
+                        window.webkit.messageHandlers.openPage.postMessage({ url: url })
+                    } else {
+                        window.webkit.openPage( url );
+                    }
+                } catch (error) { console.log(error) }
+            },
+            callback: function (data) {
+                console.log("打开窗口 : " + JSON.stringify(data))
+            }
+        },
+        openNavigator: {
+        func: function (url) {
+            try {             
+                if (!isAndroid) {
+                    window.webkit.messageHandlers.openNavigator.postMessage({ url: url })
+                } else {
+                    window.webkit.openNavigator(url);
+                }
+            } catch (error) { console.log(error) }
+        },
+        callback: function (data) {
+            console.log("打开窗口 : " + JSON.stringify(data))
+        }
+    }
+    }
+
+
+</script>
+<script>eruda.init();</script>
+
+</html>

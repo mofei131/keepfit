@@ -3,6 +3,7 @@
         <div class="calendar-win" @click.stop="">
              <Calendar
             @choseDay="clickDay"
+            :markDate=arr
             @changeMonth="changeDate"
             :futureDayHide = futureDayHide
             :agoDayHide = agoDayHide
@@ -19,7 +20,7 @@ export default {
     },
     data() {
         return {
-           arr:['2018/4/1','2018/4/3'],
+           arr:[],
            agoDayHide:"1589932800",
            futureDayHide:(new Date().getTime()).toString().slice(0, 10),
         }
@@ -29,21 +30,38 @@ export default {
             this.$parent.myDateState = false
         },
         clickDay(data) {
-            let dArray =  data.split("/");
-            
+            let dArray =  [];
+            if(data.indexOf("/")!=-1){
+                dArray = data.split("/")
+            }else{
+                dArray = data.split("-")
+            }
             this.$emit("clickDay",dArray[0]+"-"+this.util.InternetFormat(dArray[1])+"-"+this.util.InternetFormat(dArray[2]))           
-            this.close()
-            
+            this.arr=[data]
+            this.close()            
         },
         changeDate(data) {
             console.log(data); //左右点击切换月份
+        },
+        lessD(){
+            let d1 = this.arr[0];
+            let d2 = this.util.getTimestamp(d1) - 1000*60*60*24 
+            this.clickDay(this.util.dateFormat(d2, "YYYY-MM-DD"))
+        },
+        addD(){
+            let d1 = this.arr[0];
+            let d2 = this.util.getTimestamp(d1) + 1000*60*60*24           
+            if(d2<new Date().getTime()){               
+                this.clickDay(this.util.dateFormat(d2, "YYYY-MM-DD"))
+            }
         },
         clickToday(data) {
             console.log(data); //跳到了本月
         }
     },created(){
        
-    },mounted () {     
+    },mounted () {  
+        this.arr = [this.util.dateFormat("", "YYYY-MM-DD")]   
     }
 }
 </script>

@@ -14,13 +14,13 @@ module.exports = {
         selectedMode: 'single',
         radius: '90%',
         center: ['50%', '50%'],
-        color: ['#AC009A', '#5C73FF'],
+        color: [ '#5C73FF','#AC009A'],
         data: [{
-            value: 22,
+            value: 0,
             name: '浅睡',
             selected: true,
         }, {
-            value: 78,
+            value: 0,
             name: '深睡'
         }],
         label: {

@@ -1,3 +1,25 @@
+var InternetFormat = function(num) {
+    if (Number(num) < 10) {
+      return "0" + num
+    }
+    return num.toString()
+  }
+let host = []
+let minute = []
+
+let keys = [20,21,22,23,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]
+for(let i = 0;i<keys.length;i++){
+    host.push(InternetFormat(keys[i]))
+}
+for(let i = 0;i<60;i++){
+    minute.push(InternetFormat(i))
+}
+let dataX = []
+for(let i = 0;i<host.length;i++){  
+    for(let j =0;j<minute.length;j++){
+        dataX.push(host[i]+":"+minute[j])
+    }
+}
 module.exports = {
   //  backgroundColor: 'rgba(0,0,0,0)',
     grid:{
@@ -18,8 +40,7 @@ module.exports = {
     },
     color: ['#EBCDFE'],
     xAxis:{
-        data: ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00', 
-        '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00'],
+        data: dataX,
         type: 'category',
         splitLine: {
             show: false
@@ -36,12 +57,7 @@ module.exports = {
                 color: '#EBCDFE',
                 opacity: 1,
                 width:0.5
-            },           
-            // handle: {
-            //     icon:"image://data:image/gif;base64,R0lGODlhEAAQAMQAAORHHOVSKudfOulrSOp3WOyDZu6QdvCchPGolfO0o/XBs/fNwfjZ0frl3/zy7////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAkAABAALAAAAAAQABAAAAVVICSOZGlCQAosJ6mu7fiyZeKqNKToQGDsM8hBADgUXoGAiqhSvp5QAnQKGIgUhwFUYLCVDFCrKUE1lBavAViFIDlTImbKC5Gm2hB0SlBCBMQiB0UjIQA7",
-            //     show: true,
-            //     color: '#004E52'
-            // }
+            },
         },
         axisLabel: {
             show: false,
@@ -50,9 +66,7 @@ module.exports = {
         }
     },
     yAxis: {
-        type: 'value',
-        position: 'right',
-        splitNumber:2,
+        data:[10,20,30],
         splitLine: {
             show: false,
             lineStyle: {
@@ -69,25 +83,17 @@ module.exports = {
         },
         axisLabel: {
             show: false,
-           // shadowOffsetY:60,
-            // height:70,
-            // lineHeight: 70,
             color: '#999',
             fontSize: 10,
             margin:-10,
         }
     },
     series: [{
-        name: '步数',
-        type: 'bar',
-        // label:{show:true,position:'top'},
-        data: [1027, 1027, 2549, 2260, 1027, 1278, 1027, 1842, 
-            2549, 2260, 1671, 3278,5555,3600,1027,5555,5555,5555,2456,7632,3546,3654,3214,2564], //亩均实收
-        barWidth: 8,
-        /* markLine : {
-             data : [
-                  {name: '两个坐标之间的标线',yAxis: 0},
-             ]
-         }*/
+        name: '睡眠',
+        type:'line',
+        markArea: {
+            show: true,
+            data: [ ]
+        }
     }]
 };

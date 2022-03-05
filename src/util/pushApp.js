@@ -5,7 +5,6 @@ let pushApp = {
         func: function () {
             try {
                 if (!isAndroid) {
-
                     window.webkit.messageHandlers.heartRateSingle.postMessage({})
                 } else {
                     window.webkit.heartRateSingle("Hello Android!");
@@ -114,13 +113,41 @@ let pushApp = {
             console.log("H5得到APP设置结果 : " + JSON.stringify(data))
         }
     },
+    todaySteps:{
+        func: function (obj) {
+            try {
+                if (!isAndroid) {
+                    window.webkit.messageHandlers.todaySteps.postMessage(obj)
+                } else {
+                    window.webkit.todaySteps(obj);
+                }
+            } catch (error) { console.log(error) }
+        },
+        callback: function (data) {
+            console.log("H5得到APP设置结果 : " + JSON.stringify(data))
+        }
+    },
+    todaySleep:{
+        func: function (obj) {
+            try {
+                if (!isAndroid) {
+                    window.webkit.messageHandlers.todaySleep.postMessage(obj)
+                } else {
+                    window.webkit.todaySleep(obj);
+                }
+            } catch (error) { console.log(error) }
+        },
+        callback: function (data) {
+            console.log("H5得到APP设置结果 : " + JSON.stringify(data))
+        }
+    },
     closePage: { //关闭当前窗口
         func: function () {
             try {
                 if (!isAndroid) {
                     window.webkit.messageHandlers.closePage.postMessage({})
                 } else {
-                    window.webkit.closePage({});
+                    window.webkit.closePage();
                 }
             } catch (error) { console.log(error) }
         },
@@ -134,7 +161,21 @@ let pushApp = {
                 if (!isAndroid) {
                     window.webkit.messageHandlers.openPage.postMessage({ url: url })
                 } else {
-                    window.webkit.openPage({ url: url });
+                    window.webkit.openPage(url);
+                }
+            } catch (error) { console.log(error) }
+        },
+        callback: function (data) {
+            console.log("打开窗口 : " + JSON.stringify(data))
+        }
+    },
+    openNavigator: {
+        func: function (url) {
+            try {             
+                if (!isAndroid) {
+                    window.webkit.messageHandlers.openNavigator.postMessage({ url: url })
+                } else {
+                    window.webkit.openNavigator(url);
                 }
             } catch (error) { console.log(error) }
         },

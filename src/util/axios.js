@@ -4,7 +4,11 @@ let Http = axios.create({
   timeout: 300000
 });
 let Http_ = function (obj, query) {
-
+    let timesTamp = new Date().getTime()
+    let str = "keepfit@2020_"+timesTamp
+   // console.log(str)
+    let secret = window.md5(str);
+   // console.log(secret)
   // (url, query) => { 
   return Http({
       url: `${obj.Url}${obj.path||""}`,
@@ -12,7 +16,10 @@ let Http_ = function (obj, query) {
       data: query,
       headers: {
         "access_token": localStorage.app_token || "",
-        'content-type': "application/json"
+        'content-type': "application/json",
+        'timestamp':timesTamp,
+        "secret":secret.replace(/0/g,"o"),
+
       }
   }).then(r => r).catch(() => {
     alert("网络异常");

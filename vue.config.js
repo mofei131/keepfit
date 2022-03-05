@@ -1,13 +1,13 @@
-const path = require('path')
-require("./config/storeConfig")
-require("./config/routerConfig")
+// const path = require('path')
+// require("./config/storeConfig")
+// require("./config/routerConfig")
 // function resolve(dir) {
 //     return path.join(__dirname, '..', dir)
 // }
 
 module.exports = {
-    outputDir:"./html5",
-    filenameHashing:false,
+    outputDir: "./html5",
+    filenameHashing: false,
     productionSourceMap: false,
     publicPath: './',
     pages: {

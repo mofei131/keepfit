@@ -1,5 +1,3 @@
-
-
 module.exports = {
     headDay:"今日",
     headMonth:"月",
@@ -78,7 +76,8 @@ module.exports = {
     wdTip1:"摄氏度", 
     wdTip2:"日最高温度", 
     wdTip3:"日最低温度", 
-    wdTip4:"室温", 
+   // wdTip4:"室温", 
+    wdTip4:"体温", 
     wdTip5:"体温", 
     wdTip6:"测量体温",
     wdTip7:"测量室温",
@@ -94,7 +93,7 @@ module.exports = {
     motionTip2:"健步(公里)",
     motionTip3:"跑步(公里)",
     motionTip4:"骑行(公里)",
-    motionTip5:"爬山(公里)",
+    motionTip5:"其他(公里)",
     motionTip6:"时长/分钟",
     motionTip7:"配速/每小时公里",
     setUpTip1:"设置",
@@ -128,6 +127,7 @@ module.exports = {
     healthReportTip22:"您的疲劳指数适中，身体状态也较好，说明您的自我调节能力不错，已经掌握了减轻疲劳程度的方法。",
     healthReportTip23:"您的交感与副交感神经系统处于平衡状态，您的身体和心理处于一个较佳的状态。",
     healthReportTip24:"心电回放",
-    healthReportTip25:"点击回放"
-
+    healthReportTip25:"点击回放",
+    shujunull:'暂无数据生成',
+    zonglucheng:'总路程'
 }

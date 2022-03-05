@@ -1,10 +1,13 @@
 <template>
     <div class="page-view">
-        <my-head-one :name="`${util.dateFormat('','年月日')}`" @ckLeft="closePage"  @ckRight="openPage('historyTemperature')"  :type=3></my-head-one>
-        <div class="ring-1">
+        <my-head-one :name="`${util.dateFormat('','年月日')}`" @ckLeft="closePage"  @ckRight="openPage('historyTemperature')"  :type='3'></my-head-one>
+        <div :class="{'ring-1':stateIng,'ring-1_':!stateIng}">
             <div class="ring-2">
                 <div class="ring-view">
-                    <div class="ring-view-image"><img src="../../../assets/image/temperature1.gif"></div>
+                    <div class="ring-view-image">
+                        <img  v-show="stateIng" src="../../../assets/image/temperature1.gif">
+                        <img  v-show="!stateIng" src="../../../assets/image/temperature1_.png">    
+                    </div>
                     <div class="ring-view-1" :style="{'font-size':value==lang.wdTip9?'0.5rem':'0.85rem'}">{{value}}</div>
                     <div class="ring-view-2">{{lang.wdTip1}}</div> 
                 </div>
@@ -29,14 +32,15 @@
                         <span class="heart-view-span-1">{{it.degree.toFixed(1)}}</span>
                         <span class="heart-view-span-2">{{lang.wdTip1}}</span>
                     </div>
-                    <span class="heart-view-span-3"><span>{{it.type==1?lang.wdTip4:lang.wdTip5}}</span>{{util.dateFormat(it.createTime,"HH:mm")}}</span>
+                    <span class="heart-view-span-3"><span>{{it.type==1?lang.wdTip4:lang.wdTip5}}</span>{{it.createTime.slice(11,16)}}</span>
                 </div>
             </div>                  
         </div>
+         <div v-if="dataList&&Object.keys(dataList).length==0" class="heart-view"> <van-empty description="暂 无 数 据 生 成"  :image="errorImage" /> </div>
          <div class="view-fixed">
             <div class="view-fixed-but-1" @click="add(1)">{{lang.wdTip6}} </div>
-            <div class="view-fixed-line"></div>
-            <div class="view-fixed-but-2" @click="add(2)">{{lang.wdTip7}} </div>
+            <!-- <div class="view-fixed-line"></div>
+            <div class="view-fixed-but-2" @click="add(2)">{{lang.wdTip7}} </div> -->
         </div>
     </div>
 </template>
@@ -45,6 +49,7 @@ export default {
     components:{},
     data() {
         return {
+           stateIng:false,
            resultList:[],
            dataList:null,
            value:"--",
@@ -58,7 +63,7 @@ export default {
             this.Http(this.api["TemperatureDay"], {
                 currentPage: this.currentPage,
                 dateString:data
-            }).then(res => {
+            }).then(res => {               
                 if (res.data.code == "000") {
                     this.resultList = res.data.result.list
                     this.dataList = new Object()
@@ -72,6 +77,7 @@ export default {
             });
         },
         add(index){
+            this.value = "--";
             this.$toast.loading({
                 duration: 3, // 持续展示 toast
                 forbidClick: true,
@@ -90,27 +96,49 @@ export default {
                  this.getDayData(this.util.dateFormat("","YYYY-MM-DD"))
                
             })*/
+            this.stateIng = true
             if(index==1){
                 window.pushApp.temperatureSingle.func()
             }else{
                 window.pushApp.roomTemperatureSingle.func()
             }
+            
         }    
     },created(){
        
     },mounted () {     
         this.getDayData(this.util.dateFormat("","YYYY-MM-DD")) 
-        let that =  this
-        window.pushApp.temperatureSingle.callback = (data)=>{
-            that.$dialog.alert({
-                title: '体温测量结果',
-                message: data,
+        let that =  this         
+        window.pushApp.temperatureSingle.callback = (data)=>{  
+             console.log("体温测量结果 : " + data)          
+            that.Http(that.api["TemperatureBatchSave"], 
+               [{
+                    "createTime": that.util.dateFormat("","YYYY-MM-DD HH:mm:ss"),
+                    "degree":data,
+                    "type": 1                   
+                }]
+            ).then(res => {
+                that.$toast.clear()
+                that.stateIng = false
+                if(res.data.code == "000")
+                 that.getDayData(that.util.dateFormat("","YYYY-MM-DD"))
+               
             })
         } 
         window.pushApp.roomTemperatureSingle.callback = (data)=>{
-            that.$dialog.alert({
-                title: '室温测量结果',
-                message: data,
+            console.log("室温测量结果 : " + data)
+            that.Http(that.api["TemperatureBatchSave"], 
+               [{
+                    "createTime": that.util.dateFormat("","YYYY-MM-DD HH:mm:ss"),
+                    "degree":data,
+                    "type": 2                  
+                }]
+            ).then(res => {
+                that.$toast.clear()
+                that.stateIng = false
+                if(res.data.code == "000")
+                 that.getDayData(that.util.dateFormat("","YYYY-MM-DD"))
+               
             })
         }     
     }
@@ -122,6 +150,16 @@ export default {
     width:4.92rem;
     height:4.92rem;
     background:url("../../../assets/image/temperature.gif");
+    background-size: 100% 100%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.ring-1_{
+    width:4.92rem;
+    height:4.92rem;
+    background:url("../../../assets/image/temperature_.png");
     background-size: 100% 100%;
     margin: 0 auto;
     display: flex;

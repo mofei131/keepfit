@@ -39,11 +39,13 @@ export default class Util {
   // 小10 前面加 0 
   InternetFormat(num) {
     if (Number(num) < 10) {
-      return "0" + num
+      return "0" + Number(num)
     }
     return num
   }
-
+  getTimestamp(dateStr){
+    return  new Date(dateStr).getTime()
+  }
   /**
    * @param {时间戳} timestamp 
    * @param {"YYYY-MM-DD HH:mm:ss"} format 
@@ -52,9 +54,8 @@ export default class Util {
     //日期格式化  //YYYY-MM-DD HH:mm:ss  || 年月日 时分秒
     //YYYY-MM-DD HH:mm:ss
     //timestamp是整数，否则要parseInt转换,不会出现少个0的情况
-    var time = null
-    console.log(timestamp)
-    if (timestamp) {
+    var time = null  
+    if (timestamp!="") {       
         if(timestamp.toString().indexOf(" ")!=-1){
             time = new Date(timestamp.replace(" ","T"));
         }else{

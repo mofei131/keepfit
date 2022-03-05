@@ -79,6 +79,7 @@
 import opt from "../../../components/echart/echart_stepMonth";
 import myDate from "../../../components/calendar";
 export default {
+    name:"refurbish",
   components: {myDate},
   data() {
     return {
@@ -152,11 +153,11 @@ export default {
     },
      select(index){
       if(index==1&&this.index!=1){          
-          this.$router.push({ path: "/hStepsDay" });
+          this.$router.push({ path: "/hStepsDay?lang="+this.$route.query.lang });
       }else if(index==2&&this.index!=2){
-          this.$router.push({ path: "/hStepsWeek" });
+          this.$router.push({ path: "/hStepsWeek?lang="+this.$route.query.lang });
       }else if(index==3&&this.index!=3){
-          this.$router.push({ path: "/hStepsMonth" });
+          this.$router.push({ path: "/hStepsMonth?lang="+this.$route.query.lang });
       }
     },
     ckRight(){

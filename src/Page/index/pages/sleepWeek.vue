@@ -5,7 +5,7 @@
         <span>{{timeList[value].slice(5, 11)}}</span>
     </div>
      <div class="page-step">
-        <span class="page-step-1">{{util.second_host(resultList[value])[0]}}<span>小时</span>{{util.second_host(resultList[value])[1]}}<span>分钟</span></span>
+        <span class="page-step-1">{{util.second_host(resultList[value]?resultList[value].totalTime:0)[0]}}<span>{{lang.hours}}</span>{{util.second_host(resultList[value]?resultList[value].totalTime:0)[1]}}<span>{{lang.minutes}}</span></span>
     </div>
     <div class="img-view img-view-sleep">
       <div class="img-echart">
@@ -77,6 +77,7 @@
 import opt from "../../../components/echart/echart2";
 import myDate from "../../../components/calendar";
 export default {
+    name:"refurbish",
   components: {myDate},
   data() {
     return {
@@ -115,7 +116,12 @@ export default {
               this.resultList = res.data.result.list??[0,0,0,0,0,0,0]
               this.dataObj = res.data.result.obj??null
               this.value1 = this.dataObj?.percent || 0
-              opt.series[0].data = this.resultList
+              let dk= []
+              for(var i =0;i<res.data.result.list.length;i++){
+                  dk.push(res.data.result.list[i].totalTime)
+              }
+              opt.series[0].data = dk
+              console.log(dk)
               this.myChart.setOption(opt)
           }
         })
@@ -149,11 +155,11 @@ export default {
     },
     select(index){
       if(index==1&&this.index!=1){          
-          this.$router.push({ path: "/sleepDay" });
+          this.$router.push({ path: "/sleepDay?lang="+this.$route.query.lang });
       }else if(index==2&&this.index!=2){
-          this.$router.push({ path: "/sleepWeek" });
+          this.$router.push({ path: "/sleepWeek?lang="+this.$route.query.lang });
       }else if(index==3&&this.index!=3){
-          this.$router.push({ path: "/sleepMonth" });
+          this.$router.push({ path: "/sleepMonth?lang="+this.$route.query.lang });
       }
     },
     ckRight(){

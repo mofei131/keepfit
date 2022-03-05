@@ -1,0 +1,35 @@
+{
+	"result": {
+		"obj": {
+			"totalSleepTime": 34080,
+			"totalShallowTime": 23040,
+			"totalDeepTime": 11040,
+			"totalSoberNum": 1
+		},
+		"list": [{
+			"beginTime": "2020-07-12 20:00:00",
+			"endTime": "2020-07-12 22:06:00",
+			"timeRange": "20:00-22:06",
+			"durationMinute": 126,
+			"type": 2
+		}, {
+			"beginTime": "2020-07-12 22:06:00",
+			"endTime": "2020-07-12 23:58:00",
+			"timeRange": "22:06-23:58",
+			"durationMinute": 112,
+			"type": 0
+		}, {
+			"beginTime": "2020-07-12 23:58:00",
+			"endTime": "2020-07-13 04:16:00",
+			"timeRange": "23:58-04:16",
+			"durationMinute": 258,
+			"type": 2
+		}, {
+			"beginTime": "2020-07-13 04:16:00",
+			"endTime": "2020-07-13 07:20:00",
+			"timeRange": "04:16-07:20",
+			"durationMinute": 184,
+			"type": 1
+		}]
+	}
+}

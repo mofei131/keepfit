@@ -89,10 +89,14 @@ module.exports = {
         name: '步数',
         type: 'bar',
         // label:{show:true,position:'top'},
-        data: [], 
+        data: [],
         barWidth: 6,
+        barMinHeight: 8,
         itemStyle:{
         color: function(params){
+            if(params.value===0){
+                return '#ffffff00'
+            }
             if(params.dataIndex == window.curInt){
                 return '#FB9C09'
             }else{
