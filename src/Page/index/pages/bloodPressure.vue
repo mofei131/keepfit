@@ -86,9 +86,9 @@ export default {
         window.pushApp.bloodPressureSingle.callback = (data)=>{
              console.log("血压测量结果 : " + data)
             if(data.indexOf(",")!=-1){
-                that.diastolicPressure = data.split(",")[0]
-                that.systolicPressure = data.split(",")[1]
-                that.value = data.split(",")[0] + "/" + data.split(",")[1]
+                // that.diastolicPressure = data.split(",")[0]
+                // that.systolicPressure = data.split(",")[1]
+                // that.value = data.split(",")[0] + "/" + data.split(",")[1]
                 //刷新数据
                 this.getDayData(this.util.dateFormat("","YYYY-MM-DD"))
                 // that.Http(that.api["BloodPressureSave"], 

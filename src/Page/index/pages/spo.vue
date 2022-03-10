@@ -49,7 +49,7 @@ export default {
         return {
            stateIng:false,
            resultList:[],
-           dataList:null,
+           dataList:null,   
            maxSaturate:"--",
            minSaturate:"--",
            value:"--",
@@ -57,7 +57,18 @@ export default {
         }
     },
     methods: { 
+		
+		
+		// {
+		// 			   "03-09":
+		// 			   [
+		// 				   {"saturate":100,"createTime":"2022-03-09"},
+		// 				   {"saturate":100,"createTime":"2022-03-09"},
+		// 				],
+		// 			}
+		
         getDayData(data) { // 获取今日 测量的最新数据
+		// this.setData(100);
             this.Http(this.api["BloodOxygenDay"], {
                 currentPage: this.currentPage,
                 dateString:data
@@ -66,8 +77,8 @@ export default {
                     this.maxSaturate = res.data.result.obj.maxSaturate||"--"
                     this.minSaturate = res.data.result.obj.minSaturate||"--"
                     this.resultList = res.data.result.list
-                    this.dataList = new Object()
                     if(this.resultList.length>0){
+						this.dataList = new Object()
                         this.dataList[this.util.dateFormat("","月日")] = this.resultList                 
                         this.value = this.resultList[0].saturate
                     }
@@ -99,15 +110,55 @@ export default {
         },
         ckRight(){
            this.$router.push({ path: "/historySpo" });
-        }      
+        },
+		setData(num){
+			var arrayIndex = this.util.dateFormat("","月日");
+			var list = [];
+			console.log(this.dataList)
+			if(this.dataList == null) this.dataList = new Object();
+			if(this.dataList != null && this.dataList.hasOwnProperty(arrayIndex)) {
+				list = this.dataList[arrayIndex];
+			}
+			list.unshift({ 
+				"createTime": this.util.dateFormat("","YYYY-MM-DD HH:mm:ss"),
+				"saturate":num
+			})
+			
+			var maxSaturate = this.maxSaturate == '--' ? 0 : this.maxSaturate;
+			var minSaturate = this.minSaturate == '--' ? 9999 : this.minSaturate;
+			
+			for(var i in list) {
+				var item = list[i];
+				console.log("xxx",item.saturate)
+				console.log("xxx1",this.maxSaturate)
+				
+				if(parseInt(item.saturate) > maxSaturate) {
+					this.maxSaturate = item.saturate;
+				}
+				if(parseInt(item.saturate) < minSaturate) {
+					this.minSaturate = item.saturate;
+				}
+			}
+			console.log(333);
+			this.dataList[arrayIndex] = list;
+			this.value = list[list.length-1].saturate;
+			
+		}
+		
     },created(){
        
     },mounted () {   
+		// this.setData(110);
         this.getDayData(this.util.dateFormat("","YYYY-MM-DD"))     
+		
+		
+		
         let that =  this        
         window.pushApp.spoSingle.callback = (data)=>{   
+			// that.dataList = data;
             console.log("血痒测量结果 : " + data)      
-            that.getDayData(that.util.dateFormat("","YYYY-MM-DD"))     
+            // that.getDayData(that.util.dateFormat("","YYYY-MM-DD"))     
+			that.setData(data);
             // that.Http(that.api["BloodOxygenSave"], 
             //    [{
             //         "createTime": that.util.dateFormat("","YYYY-MM-DD HH:mm:ss"),

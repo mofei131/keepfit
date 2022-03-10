@@ -10,6 +10,7 @@ module.exports = {
     filenameHashing: false,
     productionSourceMap: false,
     publicPath: './',
+	lintOnSave: false,
     pages: {
         index: {
             // 应用入口配置，相当于单页面应用的main.js，必需项
