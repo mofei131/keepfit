@@ -94,7 +94,7 @@ export default {
         let that =  this    
         window.pushApp.heartRateSingle.callback = (data)=>{
             that.value = data
-            alert('接口调用之前')
+            // alert('接口调用之前')
             console.log("单次测量结果 : " + data)     
             // that.Http(that.api["HeartRateSave"], 
             //    [{

@@ -359,10 +359,18 @@ export default {
     ckRight() {
       this.$refs.screen.open();
     },
+	getSleepDay() {
+		console.log("调用APP todaySleep方法");
+		window.pushApp.todaySleep.func();
+	}
   },
   mounted: function () {
     // let myChart = this.$echarts.init(document.getElementById("code-echart-sleepday"));
     // myChart.setOption(opt);
+	
+	// 调用APP读取睡眠
+	this.getSleepDay();
+	
     this.myChart1 = this.$echarts.init(
       document.getElementById("code-echart-2")
     );
