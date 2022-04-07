@@ -10,7 +10,13 @@
     <div class="page-time">
       <span>{{sleepTime}}</span>
     </div>
-    <div class="page-step">
+		<div id="myChartNew" :style="{width: '100%', height: '4rem'}">
+			<div></div>
+		</div>
+		<!-- <div class="cake-echart-1" id="code-echart-2">
+		  <div></div>
+		</div> -->
+    <!-- <div class="page-step">
       <span class="page-step-2">{{sleepType}}</span>
       <span class="page-step-1">{{sleepValue}}</span>
       <span class="page-step-2">{{lang.minute}}</span>
@@ -63,7 +69,7 @@
           />
         </div>
       </div>
-    </div>
+    </div> -->
     <div class="sleep-time">
       <div class="sleep-time-1">{{lang.tip10}}</div>
       <div class="sleep-time-2">
@@ -200,6 +206,15 @@ export default {
       pageSize: 50,
       resultList: [],
       dataObj: null,
+			myChart2:null,
+			types : [
+			    { name: '深睡', color: '#8D44DA' },
+			    { name: '浅睡', color: '#D137CD' },
+			    // { name: '快速眼动', color: '#75d874' },
+			    { name: '清醒', color: '#FCBD28' },
+			],
+			myChartsData:[],
+			dateList:[]
     };
   },
    watch: {
@@ -224,7 +239,126 @@ export default {
         }
     }
   },
+	 // mounted(){
+	 //    this.myEcharts();
+	 //  },
   methods: {
+		//Echarts
+		 myEcharts(){
+			 this.myChart2 = this.$echarts.init(
+			   document.getElementById("myChartNew")
+			 );
+			let option = {
+        title: {
+            // text: 'Profile',
+            // left: 'center'
+        },
+					legend: {
+						selectedMode: false,
+						itemGap: 52, 
+						data: ['清醒','浅睡','深睡'],
+					},
+				grid: {
+					left: '3%',
+					right: '4%',
+					bottom: '3%',
+					containLabel: true,
+					// show:false
+				},
+        xAxis: {
+            min: 0,
+            scale: true,
+            splitLine: { show: false },
+						show:false
+        },
+        yAxis: {
+            data: ['深睡', '浅睡' ,'清醒'],
+						show:false
+        },
+        series: [
+            {
+                type: 'custom',
+                renderItem: this.renderItem,
+                itemStyle: {
+                    opacity: 0.8
+                },
+                encode: {
+                    x: [1, 2],
+                    y: 0
+                },
+                data: this.myChartsData
+            },
+								{
+									name: '清醒',
+									type: 'bar',
+									color:'#FCBD28',
+								},
+								{
+									name: '浅睡',
+									type: 'bar',
+									color:'#D137CD',
+								},{
+									name: '深睡',
+									type: 'bar',
+									color:'#8D44DA',
+								}
+        ],
+				 tooltip : {
+				            trigger: 'axis',
+				            axisPointer: {
+				                type: 'cross',  
+				                label: {
+				                    backgroundColor: 'rgba(0,0,0,0)',
+														// #6a7985
+														
+				                },
+												 lineStyle: {//默认值各异，
+														color: 'rgba(0,0,0,0.7)',//默认值各异，颜色rgba
+														type: 'solid',//默认值，
+														width: 0,//默认值，
+												},
+				            },
+										formatter(params){
+											// console.log(params)
+												 for(let x in params){
+													 // console.log(params)
+														 return params[x].axisValue+':'+params[x].value[3];
+												 }
+													
+										 }
+				        }
+    };
+			this.myChart2.setOption(option);
+		},
+		//渲染树状图
+		renderItem(params, api) {
+		    var categoryIndex = api.value(0);
+		    var start = api.coord([api.value(1), categoryIndex]);
+		    var end = api.coord([api.value(2), categoryIndex]);
+		    var height = api.size([0, 1])[1] * 0.6;
+		    var rectShape = this.$echarts.graphic.clipRectByRect(
+		        {
+		        x: start[0],
+		        y: start[1] - height / 2,
+		        width: end[0] - start[0],
+		        height: height
+		        },
+		        {
+		        x: params.coordSys.x,
+		        y: params.coordSys.y,
+		        width: params.coordSys.width,
+		        height: params.coordSys.height
+		        }
+		    );
+		    return (
+		        rectShape && {
+		        type: 'rect',
+		        transition: ['shape'],
+		        shape: rectShape,
+		        style: api.style()
+		        }
+		    );
+		},
     lessValue() {
       this.$refs.myDate.lessD();
     },
@@ -238,15 +372,39 @@ export default {
     },
     getDayData(opt_date) {
         console.log(opt_date)
-        if(opt_date==this.util.dateFormat("", "YYYY-MM-DD")){            
-            window.pushApp.todaySleep.func();
-            return ;
-        }
+        // if(opt_date==this.util.dateFormat("", "YYYY-MM-DD")){            
+        //     window.pushApp.todaySleep.func();
+        //     return ;
+        // }
 
       this.Http(this.api["SleepDay"], {
         dateString: opt_date,
       }).then((res) => {
         if (res.data.code == "000") {
+					let list = res.data.result.list
+					let timeLong = 0
+					for(let i = 0 ;i<list.length;i++){
+						let value = ['1','2','3','4']
+						let list2 = {
+							name:'',
+							value:'',
+							itemStyle:{
+								normal:{
+									color:''
+								}
+							}
+						}
+						value[0] = list[i].type == 0?2:list[i].type == 2?1:0
+						value[1] = timeLong
+						timeLong += list[i].durationMinute
+						value[2] = timeLong
+						value[3] = list[i].timeRange
+						list2.name = this.types[list[i].type == 0?2:list[i].type == 2?1:0].name
+						list2.value = value
+						list2.itemStyle.normal.color = this.types[list[i].type == 0?2:list[i].type == 2?1:0].color
+						this.myChartsData.push(list2)
+					}
+					this.myEcharts();
           this.resultList = res.data.result.list ?? [];
           this.dataObj = res.data.result.obj ?? null;
           this.value1 = this.dataObj?.percent || 0;
@@ -365,6 +523,38 @@ export default {
 	}
   },
   mounted: function () {
+		this.getDayData(this.util.dateFormat("", "YYYY-MM-DD"));
+		// this.myChartsData = [
+  //       {
+  //           name:this.types[0].name,
+		// 				//y轴位置，x轴开始位置，x轴结束位置
+  //           value:[0,0,10],
+  //           itemStyle: {
+  //               normal: {
+  //                   color: this.types[0].color
+  //               }
+  //           }
+  //       },
+  //       {
+  //           name:this.types[1].name,
+  //           value:[1,10,20],
+  //           itemStyle: {
+  //               normal: {
+  //                   color: this.types[1].color
+  //               }
+  //           }
+  //       },
+  //       {
+  //           name:this.types[2].name,
+  //           value:[2,20,30,30],
+  //           itemStyle: {
+  //               normal: {
+  //                   color: this.types[2].color
+  //               }
+  //           }
+  //       }
+  //   ]
+		this.myEcharts();
     // let myChart = this.$echarts.init(document.getElementById("code-echart-sleepday"));
     // myChart.setOption(opt);
 	

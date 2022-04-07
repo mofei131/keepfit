@@ -15,7 +15,7 @@ let Http_ = function (obj, query) {
       method: obj.Method,
       data: query,
       headers: {
-        "access_token": localStorage.app_token || "",
+        "access_token": localStorage.app_token || "3aea3d55c2f7495e949b7ca9dca10fb2",
         'content-type': "application/json",
         'timestamp':timesTamp,
         "secret":secret.replace(/0/g,"o"),
