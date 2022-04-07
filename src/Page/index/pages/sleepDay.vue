@@ -259,8 +259,8 @@ export default {
 						data: ['清醒','浅睡','深睡'],
 					},
 				grid: {
-					left: '3%',
-					right: '4%',
+					left: '0%',
+					right: '0%',
 					bottom: '3%',
 					containLabel: true,
 					// show:false
@@ -269,7 +269,7 @@ export default {
             min: 0,
             scale: true,
             splitLine: { show: false },
-						show:false
+						show:false,
         },
         yAxis: {
             data: ['深睡', '浅睡' ,'清醒'],
@@ -280,28 +280,34 @@ export default {
                 type: 'custom',
                 renderItem: this.renderItem,
                 itemStyle: {
-                    opacity: 0.8
+                    opacity: 0.8,
                 },
                 encode: {
                     x: [1, 2],
                     y: 0
                 },
+								barWidth: 100,
+								barCategoryGap:'0%',
                 data: this.myChartsData
             },
 								{
 									name: '清醒',
 									type: 'bar',
 									color:'#FCBD28',
+									barWidth : 0,
 								},
 								{
 									name: '浅睡',
 									type: 'bar',
 									color:'#D137CD',
+									barWidth : 0,
 								},{
 									name: '深睡',
 									type: 'bar',
 									color:'#8D44DA',
-								}
+									barWidth : 0,
+									barGap:100,
+								},
         ],
 				 tooltip : {
 				            trigger: 'axis',
@@ -326,7 +332,7 @@ export default {
 												 }
 													
 										 }
-				        }
+				        },
     };
 			this.myChart2.setOption(option);
 		},
@@ -335,13 +341,15 @@ export default {
 		    var categoryIndex = api.value(0);
 		    var start = api.coord([api.value(1), categoryIndex]);
 		    var end = api.coord([api.value(2), categoryIndex]);
-		    var height = api.size([0, 1])[1] * 0.6;
+		    // var height = api.size([0, 1])[1] * 0.6;
+				var height = api.size([0, 1])[1] * 1;
 		    var rectShape = this.$echarts.graphic.clipRectByRect(
 		        {
 		        x: start[0],
 		        y: start[1] - height / 2,
 		        width: end[0] - start[0],
 		        height: height
+						// height:50
 		        },
 		        {
 		        x: params.coordSys.x,
