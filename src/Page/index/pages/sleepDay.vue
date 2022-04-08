@@ -1,7 +1,7 @@
 <template>
   <div class="page-view">
     <my-head
-      :name="lang.headDay"
+      :name="dateTime"
       @ckLeft="closePage"
       @clickConten="clickConten"
       @ckRight="ckRight"
@@ -114,9 +114,9 @@
     <div class="slider-code">
       <p class="slider-code-p">
         {{lang.sleepQuality}}:
-        <span>{{lang.sleep4}}</span>
+        <span>{{value1 > 74?lang.sleep4:value1 > 49?lang.sleep3:value1 > 24?lang.sleep2:lang.sleep1}}</span>
       </p>
-      <van-slider bar-height="8px" disabled v-model="value1" max="4" min="1" :step="1" />
+      <van-slider bar-height="8px" disabled v-model="value1" max="100" min="0" :step="1" />
       <div class="slider-code-span-view">
         <span>{{lang.sleep1}}</span>
         <span>{{lang.sleep2}}</span>
@@ -137,53 +137,6 @@
 import opt from "../../../components/echart/echart_";
 import opt2 from "../../../components/echart/echart1";
 import myDate from "../../../components/calendar";
-
-// let jsos_ = {
-//   result: {
-//     obj: {
-//       totalSleepTime: 34080,
-//       totalShallowTime: 23040,
-//       totalDeepTime: 11040,
-//       totalSoberNum: 1,
-//     },
-//     list: [
-//       {
-//         beginTime: "2020-09-11 20:00:00",
-//         endTime: "2020-09-11 22:06:00",
-//         timeRange: "20:00-22:06",
-//         durationMinute: 126,
-//         type: 2,
-//       },
-//       {
-//         beginTime: "2020-09-11 22:06:00",
-//         endTime: "2020-09-11 23:58:00",
-//         timeRange: "22:06-23:58",
-//         durationMinute: 112,
-//         type: 0,
-//       },
-//       {
-//         beginTime: "2020-09-12 23:58:00",
-//         endTime: "2020-09-12 04:16:00",
-//         timeRange: "23:58-04:16",
-//         durationMinute: 258,
-//         type: 2,
-//       },
-//       {
-//         beginTime: "2020-09-12 04:16:00",
-//         endTime: "2020-09-12 07:20:00",
-//         timeRange: "04:16-07:20",
-//         durationMinute: 184,
-//         type: 1,
-//       },
-//     ],
-//   },
-// };
- // android
-// let jsos_ = {"result":{"list":[{"beginTime":"2021-04-19 20:00:00","durationMinute":57,"endTime":"2021-04-19 20:57:00","timeRange":"20:00-20:57","type":0},{"beginTime":"2021-04-19 20:57:00","durationMinute":2,"endTime":"2021-04-19 20:59:00","timeRange":"20:57-20:59","type":1},{"beginTime":"2021-04-19 20:59:00","durationMinute":1021,"endTime":"2021-04-20 14:00:00","timeRange":"20:59-14:00","type":0}],"obj":{"totalDeepTime":0,"totalShallowTime":120,"totalSleepTime":120,"totalSoberNum":0}}}
-
-//{"result":{"list":[{"beginTime":"2021-04-19 20:00:00","durationMinute":461,"endTime":"2021-04-20 03:41:00","timeRange":"20:00-03:41","type":0},{"beginTime":"2021-04-20 03:41:00","durationMinute":11,"endTime":"2021-04-20 03:52:00","timeRange":"03:41-03:52","type":1},{"beginTime":"2021-04-20 03:52:00","durationMinute":14,"endTime":"2021-04-20 04:06:00","timeRange":"03:52-04:06","type":2},{"beginTime":"2021-04-20 04:06:00","durationMinute":11,"endTime":"2021-04-20 04:17:00","timeRange":"04:06-04:17","type":1},{"beginTime":"2021-04-20 04:17:00","durationMinute":15,"endTime":"2021-04-20 04:32:00","timeRange":"04:17-04:32","type":0},{"beginTime":"2021-04-20 04:32:00","durationMinute":30,"endTime":"2021-04-20 05:02:00","timeRange":"04:32-05:02","type":2},{"beginTime":"2021-04-20 05:02:00","durationMinute":15,"endTime":"2021-04-20 05:17:00","timeRange":"05:02-05:17","type":1},{"beginTime":"2021-04-20 05:17:00","durationMinute":14,"endTime":"2021-04-20 05:31:00","timeRange":"05:17-05:31","type":2},{"beginTime":"2021-04-20 05:31:00","durationMinute":13,"endTime":"2021-04-20 05:44:00","timeRange":"05:31-05:44","type":1},{"beginTime":"2021-04-20 05:44:00","durationMinute":14,"endTime":"2021-04-20 05:58:00","timeRange":"05:44-05:58","type":2},{"beginTime":"2021-04-20 05:58:00","durationMinute":24,"endTime":"2021-04-20 06:22:00","timeRange":"05:58-06:22","type":1},{"beginTime":"2021-04-20 06:22:00","durationMinute":26,"endTime":"2021-04-20 06:48:00","timeRange":"06:22-06:48","type":2},{"beginTime":"2021-04-20 06:48:00","durationMinute":9,"endTime":"2021-04-20 06:57:00","timeRange":"06:48-06:57","type":1},{"beginTime":"2021-04-20 06:57:00","durationMinute":4,"endTime":"2021-04-20 07:01:00","timeRange":"06:57-07:01","type":0},{"beginTime":"2021-04-20 07:01:00","durationMinute":11,"endTime":"2021-04-20 07:12:00","timeRange":"07:01-07:12","type":1},{"beginTime":"2021-04-20 07:12:00","durationMinute":38,"endTime":"2021-04-20 07:50:00","timeRange":"07:12-07:50","type":2},{"beginTime":"2021-04-20 07:50:00","durationMinute":19,"endTime":"2021-04-20 08:09:00","timeRange":"07:50-08:09","type":1},{"beginTime":"2021-04-20 08:09:00","durationMinute":3,"endTime":"2021-04-20 08:12:00","timeRange":"08:09-08:12","type":2},{"beginTime":"2021-04-20 08:12:00","durationMinute":7,"endTime":"2021-04-20 08:19:00","timeRange":"08:12-08:19","type":1},{"beginTime":"2021-04-20 08:19:00","durationMinute":6,"endTime":"2021-04-20 08:25:00","timeRange":"08:19-08:25","type":2},{"beginTime":"2021-04-20 08:25:00","durationMinute":5,"endTime":"2021-04-20 08:30:00","timeRange":"08:25-08:30","type":1},{"beginTime":"2021-04-20 08:30:00","durationMinute":210,"endTime":"2021-04-20 12:00:00","timeRange":"08:30-12:00","type":0}],"obj":{"totalDeepTime":8700,"totalShallowTime":7500,"totalSleepTime":16200,"totalSoberNum":0}}}
-// let jsos_ = {"result":{"list":[{"beginTime":"2021-04-19 20:00:00","durationMinute":461,"endTime":"2021-04-20 03:41:00","timeRange":"20:00-03:41","type":0},{"beginTime":"2021-04-20 03:41:00","durationMinute":11,"endTime":"2021-04-20 03:52:00","timeRange":"03:41-03:52","type":1},{"beginTime":"2021-04-20 03:52:00","durationMinute":8,"endTime":"2021-04-20 04:00:00","timeRange":"03:52-04:00","type":2},{"beginTime":"2021-04-20 04:00:00","durationMinute":6,"endTime":"2021-04-20 04:06:00","timeRange":"04:00-04:06","type":2},{"beginTime":"2021-04-20 04:06:00","durationMinute":11,"endTime":"2021-04-20 04:17:00","timeRange":"04:06-04:17","type":1},{"beginTime":"2021-04-20 04:17:00","durationMinute":15,"endTime":"2021-04-20 04:32:00","timeRange":"04:17-04:32","type":0},{"beginTime":"2021-04-20 04:32:00","durationMinute":28,"endTime":"2021-04-20 05:00:00","timeRange":"04:32-05:00","type":2},{"beginTime":"2021-04-20 05:00:00","durationMinute":2,"endTime":"2021-04-20 05:02:00","timeRange":"05:00-05:02","type":2},{"beginTime":"2021-04-20 05:02:00","durationMinute":15,"endTime":"2021-04-20 05:17:00","timeRange":"05:02-05:17","type":1},{"beginTime":"2021-04-20 05:17:00","durationMinute":14,"endTime":"2021-04-20 05:31:00","timeRange":"05:17-05:31","type":2},{"beginTime":"2021-04-20 05:31:00","durationMinute":13,"endTime":"2021-04-20 05:44:00","timeRange":"05:31-05:44","type":1},{"beginTime":"2021-04-20 05:44:00","durationMinute":14,"endTime":"2021-04-20 05:58:00","timeRange":"05:44-05:58","type":2},{"beginTime":"2021-04-20 05:58:00","durationMinute":2,"endTime":"2021-04-20 06:00:00","timeRange":"05:58-06:00","type":1},{"beginTime":"2021-04-20 06:00:00","durationMinute":22,"endTime":"2021-04-20 06:22:00","timeRange":"06:00-06:22","type":1},{"beginTime":"2021-04-20 06:22:00","durationMinute":26,"endTime":"2021-04-20 06:48:00","timeRange":"06:22-06:48","type":2},{"beginTime":"2021-04-20 06:48:00","durationMinute":9,"endTime":"2021-04-20 06:57:00","timeRange":"06:48-06:57","type":1},{"beginTime":"2021-04-20 06:57:00","durationMinute":4,"endTime":"2021-04-20 07:01:00","timeRange":"06:57-07:01","type":0},{"beginTime":"2021-04-20 07:01:00","durationMinute":11,"endTime":"2021-04-20 07:12:00","timeRange":"07:01-07:12","type":1},{"beginTime":"2021-04-20 07:12:00","durationMinute":38,"endTime":"2021-04-20 07:50:00","timeRange":"07:12-07:50","type":2},{"beginTime":"2021-04-20 07:50:00","durationMinute":10,"endTime":"2021-04-20 08:00:00","timeRange":"07:50-08:00","type":1},{"beginTime":"2021-04-20 08:00:00","durationMinute":9,"endTime":"2021-04-20 08:09:00","timeRange":"08:00-08:09","type":1},{"beginTime":"2021-04-20 08:09:00","durationMinute":3,"endTime":"2021-04-20 08:12:00","timeRange":"08:09-08:12","type":2},{"beginTime":"2021-04-20 08:12:00","durationMinute":7,"endTime":"2021-04-20 08:19:00","timeRange":"08:12-08:19","type":1},{"beginTime":"2021-04-20 08:19:00","durationMinute":6,"endTime":"2021-04-20 08:25:00","timeRange":"08:19-08:25","type":2},{"beginTime":"2021-04-20 08:25:00","durationMinute":5,"endTime":"2021-04-20 08:30:00","timeRange":"08:25-08:30","type":1},{"beginTime":"2021-04-20 08:30:00","durationMinute":210,"endTime":"2021-04-20 12:00:00","timeRange":"08:30-12:00","type":0}],"obj":{"totalDeepTime":8700,"totalShallowTime":7500,"totalSleepTime":16200}}}
-
 // 1:深睡,2:浅睡,0:清醒
 export default {
      name:"refurbish",
@@ -192,7 +145,7 @@ export default {
     return {
       dateTime: window.lang.headDay,
       value: 0,
-      value1: 3,
+      value1: 0,
       index: 1,
       sleepValue: 0,
       sleepType: "",
@@ -208,10 +161,10 @@ export default {
       dataObj: null,
 			myChart2:null,
 			types : [
-			    { name: '深睡', color: '#8D44DA' },
-			    { name: '浅睡', color: '#D137CD' },
+			    { name: lang.deepSleep, color: '#8D44DA' },
+			    { name: lang.easySleep, color: '#D137CD' },
 			    // { name: '快速眼动', color: '#75d874' },
-			    { name: '清醒', color: '#FCBD28' },
+			    { name: lang.sober, color: '#FCBD28' },
 			],
 			myChartsData:[],
 			dateList:[]
@@ -226,13 +179,13 @@ export default {
             if(begin_data<end_data){                
                 if(_seqData>=begin_data&&_seqData<=end_data){
                     this.sleepValue = this.sleepData[i].durationMinute;
-                    this.sleepType = this.sleepData[i].type == 1 ?  "深睡" : "浅睡" ;
+                    this.sleepType = this.sleepData[i].type == 1 ?  lang.deepSleep : lang.easySleep ;
                     this.sleepTime = this.sleepData[i].timeRange.replace("-", " - ");
                 }
             }else{
                 if(_seqData<=2400&&_seqData>=begin_data || _seqData>=0&&_seqData<=end_data){
                     this.sleepValue = this.sleepData[i].durationMinute;
-                    this.sleepType = this.sleepData[i].type == 1 ?  "深睡" : "浅睡" ;
+                    this.sleepType = this.sleepData[i].type == 1 ?  lang.deepSleep : lang.easySleep ;
                     this.sleepTime = this.sleepData[i].timeRange.replace("-", " - ");
                 }
             }
@@ -253,7 +206,7 @@ export default {
 					legend: {
 						selectedMode: false,
 						itemGap: 52, 
-						data: ['清醒','浅睡','深睡'],
+						data: [lang.sober,lang.easySleep,lang.deepSleep],
 					},
 				grid: {
 					left: '0%',
@@ -269,7 +222,7 @@ export default {
 						
         },
         yAxis: {
-            data: ['深睡', '浅睡' ,'清醒'],
+            data: [lang.deepSleep, lang.easySleep ,lang.sober],
 						show:false,
 						axisPointer: {
 						    show:false
@@ -291,18 +244,18 @@ export default {
                 data: this.myChartsData
             },
 								{
-									name: '清醒',
+									name: lang.sober,
 									type: 'bar',
 									color:'#FCBD28',
 									barWidth : 0,
 								},
 								{
-									name: '浅睡',
+									name: lang.easySleep,
 									type: 'bar',
 									color:'#D137CD',
 									barWidth : 0,
 								},{
-									name: '深睡',
+									name: lang.deepSleep,
 									type: 'bar',
 									color:'#8D44DA',
 									barWidth : 0,
@@ -411,7 +364,9 @@ export default {
 					this.setChartData(list)
           this.resultList = res.data.result.list ?? [];
           this.dataObj = res.data.result.obj ?? null;
-          this.value1 = this.dataObj?.percent || 0;
+          // this.value1 = this.dataObj.percent || 0;
+					let sum = this.dataObj.totalDeepTime/this.dataObj.totalSleepTime*100
+					this.value1 = Math.round(sum)
           let markAreaD = [];
           this.sleepData = [];
           var jsFn = (i) => {
@@ -464,14 +419,14 @@ export default {
           }
           opt.series[0].markArea.data = markAreaD;
           console.log(opt)
-          this.myChart.setOption(opt);
+          // this.myChart.setOption(opt);
           let dk =
             (this.dataObj?.totalShallowTime ?? 0) /
               (this.dataObj?.totalSleepTime ?? 0) || 0;
           opt2.series[0].data = [
             {
               value: dk ? (dk * 100).toFixed(1) : 0,
-              name: "浅睡",
+              name: lang.easySleep,
               selected: true,
             },
             {
@@ -480,13 +435,16 @@ export default {
                   ? (100 - (dk * 100).toFixed(1)).toFixed(1)
                   : 0
                 : 0,
-              name: "深睡",
+              name: lang.deepSleep,
             },
           ];
           if (this.sleepData.length > 0) {
+						console.log('请求数据')
+						console.log(this.sleepData)
             this.sleepValue = this.sleepData[0].durationMinute;
-            this.sleepType = this.sleepData[0].type == 1 ?  "深睡" : "浅睡" ;
-            this.sleepTime = this.sleepData[0].timeRange.replace("-", " - ");
+            this.sleepType = this.sleepData[0].type == 1 ?  lang.deepSleep : lang.easySleep ;
+            // this.sleepTime = this.sleepData[0].timeRange.replace("-", " - ");
+						this.sleepTime = this.sleepData[0].timeRange.split('-')[0]+' - '+this.sleepData[this.sleepData.length-1].timeRange.split('-')[1]
           } else {
             this.sleepValue = 0;
             this.sleepType = "";
@@ -494,8 +452,8 @@ export default {
           }
             this.myChart1.setOption(opt2);
             this.myChart1.resize();
-            this.myChart
-            .resize();
+            // this.myChart
+            // .resize();
         }
       });
     },
@@ -503,7 +461,8 @@ export default {
       this.myDateState = true;
     },
     clickDay(data) {
-      this.dateTime = data.replace("-", "年").replace("-", "月") + "日";
+			this.myChartsData = []
+      this.dateTime = data.replace("-", lang.year).replace("-", lang.month) + lang.day;
       this.getDayData(data);
     },
     select(index) {
@@ -531,132 +490,134 @@ export default {
 	
 	// 调用APP读取睡眠
 	this.getSleepDay();
-	
-    this.myChart1 = this.$echarts.init(
-      document.getElementById("code-echart-2")
-    );
-    this.myChart1.setOption(opt2);
-
-    this.myChart = this.$echarts.init(
-      document.getElementById("code-echart-sleepday")
-    );
-    this.myChart.setOption(opt);
-   // this.getDayData(this.util.dateFormat("", "YYYY-MM-DD"));
-    if (localStorage.userIndex != 1) {
-      this.myWinState = true;
-    }
-   
+    
+   this.getDayData(this.util.dateFormat("", "YYYY-MM-DD"));
     let that = this
     setTimeout(() => {
      window.pushApp.todaySleep.callback = (data) => {
-					 if(data == 'false'){
-						this.getDayData(this.util.dateFormat("", "YYYY-MM-DD"));
-						return
-					 }
-           let jsos_ = JSON.parse(data)    
-           console.log("todaySleep结果 : "+data);
-            console.log(jsos_);
-          that.resultList = jsos_["result"]["list"] ?? [];
-          that.dataObj = jsos_["result"].obj ?? null;        
-          that.value1 = that.dataObj?.percent || 0;
-          let markAreaD = [];
-          that.sleepData = [];
-          var jsFn = (i) => {
-            if (that.resultList[i].type == 2) {
-              //浅睡
-              markAreaD.push([
-                {
-                  xAxis: that.resultList[i].timeRange.split("-")[0],
+			 
+			 // console.log('data结果：'+  )
+				// 	 if(data == 'false'){
+				// 		this.getDayData(this.util.dateFormat("", "YYYY-MM-DD"));
+				// 		return
+				// 	 }
+    //        let jsos_ = JSON.parse(data)    
+    //        console.log("todaySleep结果 : "+data);
+    //         console.log(jsos_);
+    //       that.resultList = jsos_["result"]["list"] ?? [];
+    //       that.dataObj = jsos_["result"].obj ?? null;        
+    //       that.value1 = that.dataObj?.percent || 0;
+    //       let markAreaD = [];
+    //       that.sleepData = [];
+    //       var jsFn = (i) => {
+    //         if (that.resultList[i].type == 2) {
+    //           //浅睡
+    //           markAreaD.push([
+    //             {
+    //               xAxis: that.resultList[i].timeRange.split("-")[0],
                   
-                  itemStyle: { color: "rgb(92, 115, 255)" },
-                },
-                {
-                  xAxis: that.resultList[i].timeRange.split("-")[1],
-                  yAxis: "30",
-                },
-              ]);
-              that.sleepData.push(that.resultList[i]);
-            } else if (that.resultList[i].type == 1) {
-              //深睡 
-              markAreaD.push([
-                {
-                  xAxis: that.resultList[i].timeRange.split("-")[0],
-                  itemStyle: { color: "#ac009a" },
-                },
-                {
-                  xAxis: that.resultList[i].timeRange.split("-")[1],
-                  yAxis: "20",
-                },
-              ]);
-              that.sleepData.push(that.resultList[i]);
-            }
-          };
-          for (let i = 0; i < that.resultList.length; i++) {
-              jsFn(i);           
-          }
-          opt.series[0].markArea.data = markAreaD;
+    //               itemStyle: { color: "rgb(92, 115, 255)" },
+    //             },
+    //             {
+    //               xAxis: that.resultList[i].timeRange.split("-")[1],
+    //               yAxis: "30",
+    //             },
+    //           ]);
+    //           that.sleepData.push(that.resultList[i]);
+    //         } else if (that.resultList[i].type == 1) {
+    //           //深睡 
+    //           markAreaD.push([
+    //             {
+    //               xAxis: that.resultList[i].timeRange.split("-")[0],
+    //               itemStyle: { color: "#ac009a" },
+    //             },
+    //             {
+    //               xAxis: that.resultList[i].timeRange.split("-")[1],
+    //               yAxis: "20",
+    //             },
+    //           ]);
+    //           that.sleepData.push(that.resultList[i]);
+    //         }
+    //       };
+    //       for (let i = 0; i < that.resultList.length; i++) {
+    //           jsFn(i);           
+    //       }
+    //       opt.series[0].markArea.data = markAreaD;
          
-          let dk =
-            (that.dataObj?.totalShallowTime ?? 0) /
-              (that.dataObj?.totalSleepTime ?? 0) || 0;
-          opt2.series[0].data = [
-            {
-              value: dk ? (dk * 100).toFixed(1) : 0,
-              name: "浅睡",
-              selected: true,
-            },
-            {
-              value: dk
-                ? that.dataObj?.totalDeepTime ?? 0
-                  ? (100 - (dk * 100).toFixed(1)).toFixed(1)
-                  : 0
-                : 0,
-              name: "深睡",
-            },
-          ];
+    //       let dk =
+    //         (that.dataObj?.totalShallowTime ?? 0) /
+    //           (that.dataObj?.totalSleepTime ?? 0) || 0;
+    //       opt2.series[0].data = [
+    //         {
+    //           value: dk ? (dk * 100).toFixed(1) : 0,
+    //           name: "浅睡",
+    //           selected: true,
+    //         },
+    //         {
+    //           value: dk
+    //             ? that.dataObj?.totalDeepTime ?? 0
+    //               ? (100 - (dk * 100).toFixed(1)).toFixed(1)
+    //               : 0
+    //             : 0,
+    //           name: "深睡",
+    //         },
+    //       ];
 
-          if (that.sleepData.length > 0) {
-            that.sleepValue = that.sleepData[0].durationMinute;
-            that.sleepType = that.sleepData[0].type == 1 ? "深睡" : "浅睡" ;
-            that.sleepTime = that.sleepData[0].timeRange.replace("-", " - ");
-          } else {
-            that.sleepValue = 0;
-            that.sleepType = "";
-            that.sleepTime = "00:00 - 01:00";
-          }
-           that.myChart.setOption(opt);
-          that.myChart1.setOption(opt2);
+    //       if (that.sleepData.length > 0) {
+    //         that.sleepValue = that.sleepData[0].durationMinute;
+    //         that.sleepType = that.sleepData[0].type == 1 ? "深睡" : "浅睡" ;
+    //         that.sleepTime = that.sleepData[0].timeRange.replace("-", " - ");
+    //       } else {
+    //         that.sleepValue = 0;
+    //         that.sleepType = "";
+    //         that.sleepTime = "00:00 - 01:00";
+    //       }
+    //        that.myChart.setOption(opt);
+    //       that.myChart1.setOption(opt2);
         
-               that.myChart.resize();
-               that.myChart1.resize();
+    //            that.myChart.resize();
+    //            that.myChart1.resize();
         
-          console.log(opt)
+    //       console.log(opt)
      };
       console.log("调用 todaySleep 等待结果 .... ")
     //  window.pushApp.todaySleep.func();
     }, 300);
+		this.myChart1 = this.$echarts.init(
+		   document.getElementById("code-echart-2")
+		 );
+		 this.myChart1.setOption(opt2);
+		
+		 // this.myChart = this.$echarts.init(
+		 //   document.getElementById("code-echart-sleepday")
+		 // );
+		 // this.myChart.setOption(opt);
+				
+		// this.getDayData(this.util.dateFormat("", "YYYY-MM-DD"));
+		 if (localStorage.userIndex != 1) {
+		   this.myWinState = true;
+		 }
 
 
-
-    this.myChart.on("click", (params) => {
-    for(let i =0;i<opt.xAxis.data.length;i++){
-        if(opt.xAxis.data[i]==params.data.xAxis){
-            this.value  = i;
-        }
-    }     
-      if (this.sleepData.length > 0) {
-        for (var i = 0; i < this.sleepData.length; i++) {
-          if (
-            this.sleepData[i].timeRange ==
-            params.data.coord[0][0] + "-" + params.data.coord[1][0]
-          ) {
-            this.sleepValue = this.sleepData[i].durationMinute;
-            this.sleepType = this.sleepData[i].type == 1 ?  "深睡" : "浅睡" ;
-            this.sleepTime = this.sleepData[i].timeRange.replace("-", " - ");
-          }
-        }
-      }
-    });
+    // this.myChart.on("click", (params) => {
+    // for(let i =0;i<opt.xAxis.data.length;i++){
+    //     if(opt.xAxis.data[i]==params.data.xAxis){
+    //         this.value  = i;
+    //     }
+    // }     
+    //   if (this.sleepData.length > 0) {
+    //     for (var i = 0; i < this.sleepData.length; i++) {
+    //       if (
+    //         this.sleepData[i].timeRange ==
+    //         params.data.coord[0][0] + "-" + params.data.coord[1][0]
+    //       ) {
+    //         this.sleepValue = this.sleepData[i].durationMinute;
+    //         this.sleepType = this.sleepData[i].type == 1 ?  "深睡" : "浅睡" ;
+    //         this.sleepTime = this.sleepData[i].timeRange.replace("-", " - ");
+    //       }
+    //     }
+    //   }
+    // });
   },
 };
 </script>
