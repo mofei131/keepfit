@@ -270,10 +270,14 @@ export default {
             scale: true,
             splitLine: { show: false },
 						show:false,
+						
         },
         yAxis: {
             data: ['深睡', '浅睡' ,'清醒'],
-						show:false
+						show:false,
+						axisPointer: {
+						    show:false
+						},
         },
         series: [
             {
@@ -310,26 +314,25 @@ export default {
 								},
         ],
 				 tooltip : {
-				            trigger: 'axis',
+				            // trigger: 'axis',
+										trigger: 'item',
 				            axisPointer: {
-				                type: 'cross',  
+				                type: 'cross',
+												crossStyle: {
+													type:'dashed',
+													opacity:1,
+												},
 				                label: {
 				                    backgroundColor: 'rgba(0,0,0,0)',
-														// #6a7985
-														
 				                },
-												 lineStyle: {//默认值各异，
-														color: 'rgba(0,0,0,0.7)',//默认值各异，颜色rgba
-														type: 'solid',//默认值，
-														width: 0,//默认值，
-												},
 				            },
 										formatter(params){
 											// console.log(params)
-												 for(let x in params){
-													 console.log(params)
-														 return params[x].axisValue+':'+params[x].value[3];
-												 }
+											return params.name+':'+params.value[3];
+												 // for(let x in params){
+													//  // console.log(params[x])
+													// 	 return params[x].axisValue+':'+params[x].value[3];
+												 // }
 													
 										 }
 				        },
@@ -378,6 +381,32 @@ export default {
       //     this.value = 0;
       //   }
     },
+	setChartData(list) {
+		let timeLong = 0
+		for(let i = 0 ;i<list.length;i++){
+			let value = ['1','2','3','4']
+			let list2 = {
+				name:'',
+				value:'',
+				itemStyle:{
+					normal:{
+						color:''
+					}
+				}
+			}
+			value[0] = list[i].type == 0?2:list[i].type == 2?1:0
+			value[1] = timeLong
+			timeLong += list[i].durationMinute
+			value[2] = timeLong
+			value[3] = list[i].timeRange
+			list2.name = this.types[list[i].type == 0?2:list[i].type == 2?1:0].name
+			list2.value = value
+			list2.itemStyle.normal.color = this.types[list[i].type == 0?2:list[i].type == 2?1:0].color
+			this.myChartsData.push(list2)
+		}
+		this.myEcharts();
+	},
+	
     getDayData(opt_date) {
         console.log(opt_date)
         // if(opt_date==this.util.dateFormat("", "YYYY-MM-DD")){            
