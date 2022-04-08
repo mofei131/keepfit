@@ -239,9 +239,6 @@ export default {
         }
     }
   },
-	 // mounted(){
-	 //    this.myEcharts();
-	 //  },
   methods: {
 		//Echarts
 		 myEcharts(){
@@ -263,7 +260,6 @@ export default {
 					right: '0%',
 					bottom: '3%',
 					containLabel: true,
-					// show:false
 				},
         xAxis: {
             min: 0,
@@ -314,7 +310,6 @@ export default {
 								},
         ],
 				 tooltip : {
-				            // trigger: 'axis',
 										trigger: 'item',
 				            axisPointer: {
 				                type: 'cross',
@@ -327,13 +322,7 @@ export default {
 				                },
 				            },
 										formatter(params){
-											// console.log(params)
 											return params.name+':'+params.value[3];
-												 // for(let x in params){
-													//  // console.log(params[x])
-													// 	 return params[x].axisValue+':'+params[x].value[3];
-												 // }
-													
 										 }
 				        },
     };
@@ -419,29 +408,7 @@ export default {
       }).then((res) => {
         if (res.data.code == "000") {
 					let list = res.data.result.list
-					let timeLong = 0
-					for(let i = 0 ;i<list.length;i++){
-						let value = ['1','2','3','4']
-						let list2 = {
-							name:'',
-							value:'',
-							itemStyle:{
-								normal:{
-									color:''
-								}
-							}
-						}
-						value[0] = list[i].type == 0?2:list[i].type == 2?0:1
-						value[1] = timeLong
-						timeLong += list[i].durationMinute
-						value[2] = timeLong
-						value[3] = list[i].timeRange
-						list2.name = this.types[list[i].type == 0?2:list[i].type == 2?1:0].name
-						list2.value = value
-						list2.itemStyle.normal.color = this.types[list[i].type == 0?2:list[i].type == 2?0:1].color
-						this.myChartsData.push(list2)
-					}
-					this.myEcharts();
+					this.setChartData(list)
           this.resultList = res.data.result.list ?? [];
           this.dataObj = res.data.result.obj ?? null;
           this.value1 = this.dataObj?.percent || 0;
@@ -560,40 +527,7 @@ export default {
 	}
   },
   mounted: function () {
-		this.getDayData(this.util.dateFormat("", "YYYY-MM-DD"));
-		// this.myChartsData = [
-  //       {
-  //           name:this.types[0].name,
-		// 				//y轴位置，x轴开始位置，x轴结束位置
-  //           value:[0,0,10],
-  //           itemStyle: {
-  //               normal: {
-  //                   color: this.types[0].color
-  //               }
-  //           }
-  //       },
-  //       {
-  //           name:this.types[1].name,
-  //           value:[1,10,20],
-  //           itemStyle: {
-  //               normal: {
-  //                   color: this.types[1].color
-  //               }
-  //           }
-  //       },
-  //       {
-  //           name:this.types[2].name,
-  //           value:[2,20,30,30],
-  //           itemStyle: {
-  //               normal: {
-  //                   color: this.types[2].color
-  //               }
-  //           }
-  //       }
-  //   ]
 		this.myEcharts();
-    // let myChart = this.$echarts.init(document.getElementById("code-echart-sleepday"));
-    // myChart.setOption(opt);
 	
 	// 调用APP读取睡眠
 	this.getSleepDay();
@@ -615,10 +549,13 @@ export default {
     let that = this
     setTimeout(() => {
      window.pushApp.todaySleep.callback = (data) => {
+					 if(data == 'false'){
+						this.getDayData(this.util.dateFormat("", "YYYY-MM-DD"));
+						return
+					 }
            let jsos_ = JSON.parse(data)    
            console.log("todaySleep结果 : "+data);
             console.log(jsos_);
-            
           that.resultList = jsos_["result"]["list"] ?? [];
           that.dataObj = jsos_["result"].obj ?? null;        
           that.value1 = that.dataObj?.percent || 0;
