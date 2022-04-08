@@ -378,6 +378,32 @@ export default {
       //     this.value = 0;
       //   }
     },
+	setChartData(list) {
+		let timeLong = 0
+		for(let i = 0 ;i<list.length;i++){
+			let value = ['1','2','3','4']
+			let list2 = {
+				name:'',
+				value:'',
+				itemStyle:{
+					normal:{
+						color:''
+					}
+				}
+			}
+			value[0] = list[i].type == 0?2:list[i].type == 2?1:0
+			value[1] = timeLong
+			timeLong += list[i].durationMinute
+			value[2] = timeLong
+			value[3] = list[i].timeRange
+			list2.name = this.types[list[i].type == 0?2:list[i].type == 2?1:0].name
+			list2.value = value
+			list2.itemStyle.normal.color = this.types[list[i].type == 0?2:list[i].type == 2?1:0].color
+			this.myChartsData.push(list2)
+		}
+		this.myEcharts();
+	},
+	
     getDayData(opt_date) {
         console.log(opt_date)
         // if(opt_date==this.util.dateFormat("", "YYYY-MM-DD")){            
@@ -389,65 +415,43 @@ export default {
         dateString: opt_date,
       }).then((res) => {
         if (res.data.code == "000") {
-					let list = res.data.result.list
-					let timeLong = 0
-					for(let i = 0 ;i<list.length;i++){
-						let value = ['1','2','3','4']
-						let list2 = {
-							name:'',
-							value:'',
-							itemStyle:{
-								normal:{
-									color:''
-								}
-							}
-						}
-						value[0] = list[i].type == 0?2:list[i].type == 2?1:0
-						value[1] = timeLong
-						timeLong += list[i].durationMinute
-						value[2] = timeLong
-						value[3] = list[i].timeRange
-						list2.name = this.types[list[i].type == 0?2:list[i].type == 2?1:0].name
-						list2.value = value
-						list2.itemStyle.normal.color = this.types[list[i].type == 0?2:list[i].type == 2?1:0].color
-						this.myChartsData.push(list2)
-					}
-					this.myEcharts();
-          this.resultList = res.data.result.list ?? [];
-          this.dataObj = res.data.result.obj ?? null;
-          this.value1 = this.dataObj?.percent || 0;
-          let markAreaD = [];
-          this.sleepData = [];
-          var jsFn = (i) => {
-            if (this.resultList[i].type == 2) {
-              //深睡眠
-              markAreaD.push([
-                {
-                  xAxis: this.resultList[i].timeRange.split("-")[0],
-                 
-                   itemStyle: { color: "rgb(92, 115, 255)" },
-                },
-                {
-                  xAxis: this.resultList[i].timeRange.split("-")[1],
-                  yAxis: "30",
-                },
-              ]);
-              this.sleepData.push(this.resultList[i]);
-            } else if (this.resultList[i].type == 1) {
-              //浅睡眠
-              markAreaD.push([
-                {
-                  xAxis: this.resultList[i].timeRange.split("-")[0],
-                     itemStyle: { color: "#ac009a" },
-                },
-                {
-                  xAxis: this.resultList[i].timeRange.split("-")[1],
-                  yAxis: "20",
-                },
-              ]);
-              this.sleepData.push(this.resultList[i]);
-            }
-          };
+		  let list = res.data.result.list
+		  this.setChartData(list);
+		  this.resultList = res.data.result.list ?? [];
+		  this.dataObj = res.data.result.obj ?? null;
+		  this.value1 = this.dataObj?.percent || 0;
+		  let markAreaD = [];
+		  this.sleepData = [];
+		  var jsFn = (i) => {
+			if (this.resultList[i].type == 2) {
+			  //深睡眠
+			  markAreaD.push([
+				{
+				  xAxis: this.resultList[i].timeRange.split("-")[0],
+				 
+				   itemStyle: { color: "rgb(92, 115, 255)" },
+				},
+				{
+				  xAxis: this.resultList[i].timeRange.split("-")[1],
+				  yAxis: "30",
+				},
+			  ]);
+			  this.sleepData.push(this.resultList[i]);
+			} else if (this.resultList[i].type == 1) {
+			  //浅睡眠
+			  markAreaD.push([
+				{
+				  xAxis: this.resultList[i].timeRange.split("-")[0],
+					 itemStyle: { color: "#ac009a" },
+				},
+				{
+				  xAxis: this.resultList[i].timeRange.split("-")[1],
+				  yAxis: "20",
+				},
+			  ]);
+			  this.sleepData.push(this.resultList[i]);
+			}
+		  };
           
           for (let i = 0; i < this.resultList.length; i++) {     
                jsFn(i);        
