@@ -325,28 +325,34 @@ export default {
     },
 	setChartData(list) {
 		let timeLong = 0
-		for(let i = 0 ;i<list.length;i++){
-			let value = ['1','2','3','4']
-			let list2 = {
-				name:'',
-				value:'',
-				itemStyle:{
-					normal:{
-						color:''
+			for(let i in list){
+				let value = ['1','2','3','4']
+				let list2 = {
+					name:'',
+					value:'',
+					itemStyle:{
+						normal:{
+							color:''
+						}
 					}
 				}
+				value[0] = list[i].type == 0?2:list[i].type == 2?1:0
+				value[1] = timeLong
+				timeLong += list[i].durationMinute
+				value[2] = timeLong
+				value[3] = list[i].timeRange
+				list2.name = this.types[list[i].type == 0?2:list[i].type == 2?1:0].name
+				list2.value = value
+				list2.itemStyle.normal.color = this.types[list[i].type == 0?2:list[i].type == 2?1:0].color
+				this.myChartsData.push(list2)
 			}
-			value[0] = list[i].type == 0?2:list[i].type == 2?1:0
-			value[1] = timeLong
-			timeLong += list[i].durationMinute
-			value[2] = timeLong
-			value[3] = list[i].timeRange
-			list2.name = this.types[list[i].type == 0?2:list[i].type == 2?1:0].name
-			list2.value = value
-			list2.itemStyle.normal.color = this.types[list[i].type == 0?2:list[i].type == 2?1:0].color
-			this.myChartsData.push(list2)
-		}
-		this.myEcharts();
+			this.myChart2.resize();
+			this.myEcharts();
+			// myChart.setOption(option);
+		// if(this.myChartsData.length != 0){
+			
+		// }
+		
 	},
 	
     getDayData(opt_date) {
