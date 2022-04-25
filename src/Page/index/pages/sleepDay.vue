@@ -263,21 +263,21 @@ export default {
 								},
         ],
 				 tooltip : {
-										trigger: 'item',
-				            axisPointer: {
-				                type: 'cross',
-												crossStyle: {
-													type:'dashed',
-													opacity:1,
-												},
-				                label: {
-				                    backgroundColor: 'rgba(0,0,0,0)',
-				                },
-				            },
-										formatter(params){
-											return params.name+':'+params.value[3];
-										 }
-				        },
+						trigger: 'item',
+						axisPointer: {
+								type: 'cross',
+								crossStyle: {
+									type:'dashed',
+									opacity:1,
+								},
+								label: {
+										backgroundColor: 'rgba(0,0,0,0)',
+								},
+						},
+						formatter(params){
+							return params.name+':'+params.value[3];
+						 }
+				},
     };
 			this.myChart2.setOption(option);
 		},
@@ -348,11 +348,6 @@ export default {
 			}
 			this.myChart2.resize();
 			this.myEcharts();
-			// myChart.setOption(option);
-		// if(this.myChartsData.length != 0){
-			
-		// }
-		
 	},
 	
     getDayData(opt_date) {
@@ -371,8 +366,10 @@ export default {
           this.resultList = res.data.result.list ?? [];
           this.dataObj = res.data.result.obj ?? null;
           // this.value1 = this.dataObj.percent || 0;
-					let sum = this.dataObj.totalDeepTime/this.dataObj.totalSleepTime*100
-					this.value1 = Math.round(sum)
+					if(this.dataObj != null){
+						let sum = this.dataObj.totalDeepTime/this.dataObj.totalSleepTime*100
+						this.value1 = Math.round(sum)
+					}
           let markAreaD = [];
           this.sleepData = [];
           var jsFn = (i) => {
@@ -426,26 +423,41 @@ export default {
           opt.series[0].markArea.data = markAreaD;
           console.log(opt)
           // this.myChart.setOption(opt);
-          let dk =
-            (this.dataObj?.totalShallowTime ?? 0) /
-              (this.dataObj?.totalSleepTime ?? 0) || 0;
-          opt2.series[0].data = [
-            {
-              value: dk ? (dk * 100).toFixed(1) : 0,
-              name: lang.easySleep,
-              selected: true,
-            },
-            {
-              value: dk
-                ? this.dataObj?.totalDeepTime ?? 0
-                  ? (100 - (dk * 100).toFixed(1)).toFixed(1)
-                  : 0
-                : 0,
-              name: lang.deepSleep,
-            },
-          ];
+					if(this.dataObj != null){
+						let dk =
+						  (this.dataObj?.totalShallowTime ?? 0) /
+						    (this.dataObj?.totalSleepTime ?? 0) || 0;
+						opt2.series[0].data = [
+						  {
+						    value: dk ? (dk * 100).toFixed(1) : 0,
+						    name: lang.easySleep,
+						    selected: true,
+						  },
+						  {
+						    value: dk
+						      ? this.dataObj?.totalDeepTime ?? 0
+						        ? (100 - (dk * 100).toFixed(1)).toFixed(1)
+						        : 0
+						      : 0,
+						    name: lang.deepSleep,
+						  },
+						];
+					}else{
+						console.log('没数据')
+						opt2.series[0].data = [
+						  {
+						    value: 0,
+						    name: lang.easySleep,
+						    selected: true,
+						  },
+						  {
+						    value:0,
+						    name: lang.deepSleep,
+						  },
+						];
+					}
+          
           if (this.sleepData.length > 0) {
-						console.log('请求数据')
 						console.log(this.sleepData)
             this.sleepValue = this.sleepData[0].durationMinute;
             this.sleepType = this.sleepData[0].type == 1 ?  lang.deepSleep : lang.easySleep ;
@@ -456,8 +468,8 @@ export default {
             this.sleepType = "";
             this.sleepTime = "00:00 - 01:00";
           }
+					this.myChart1.resize();
             this.myChart1.setOption(opt2);
-            this.myChart1.resize();
             // this.myChart
             // .resize();
         }
@@ -467,6 +479,7 @@ export default {
       this.myDateState = true;
     },
     clickDay(data) {
+			this.value1 = 0
 			this.myChartsData = []
       this.dateTime = data.replace("-", lang.year).replace("-", lang.month) + lang.day;
       this.getDayData(data);
@@ -497,12 +510,11 @@ export default {
 	// 调用APP读取睡眠
 	this.getSleepDay();
     
-   this.getDayData(this.util.dateFormat("", "YYYY-MM-DD"));
     let that = this
-    setTimeout(() => {
+    // setTimeout(() => {
      window.pushApp.todaySleep.callback = (data) => {
-			 
-			 // console.log('data结果：'+  )
+			 console.log('data结果：'+ data)
+			 this.getDayData(this.util.dateFormat("", "YYYY-MM-DD"));
 				// 	 if(data == 'false'){
 				// 		this.getDayData(this.util.dateFormat("", "YYYY-MM-DD"));
 				// 		return
@@ -588,7 +600,7 @@ export default {
      };
       console.log("调用 todaySleep 等待结果 .... ")
     //  window.pushApp.todaySleep.func();
-    }, 300);
+    // }, 300);
 		this.myChart1 = this.$echarts.init(
 		   document.getElementById("code-echart-2")
 		 );

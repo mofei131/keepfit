@@ -1,6 +1,6 @@
 <template>
   <div class="page-view">
-    <my-head :name="lang.headDay"  @ckLeft="closePage"  @clickConten="clickConten" @ckRight="ckRight" :type="1"></my-head>
+    <my-head :name="dateTime"  @ckLeft="closePage"  @clickConten="clickConten" @ckRight="ckRight" :type="1"></my-head>
     <div class="page-time">
       <span>{{timeList[value]}}</span>
     </div>
@@ -29,7 +29,7 @@
           <span :class="{'slider-action':value==23}">00:00</span>
         </div>
         <div style="width:100%;background: rgb(251, 155, 6);height: 2px;" class="van-slider_diy">
-             <van-slider style="width:80%;margin: 0 auto;" v-model="value" max=23 min=0 :step="1" inactive-color="#FB9B06" active-color="#FB9B06" />
+             <van-slider style="width:80%;margin: 0 auto;" v-model="value" max=23 min=0 :step="1" inactive-color="#FB9B06" active-color="#FB9B06" @change="onChange" />
         </div>
       </div>
     </div>
@@ -124,7 +124,7 @@ export default {
     components: { myWin, myDate},
     data() {
     return {
-      // dateTime:window.lang.headDay,
+      dateTime:window.lang.headDay,
       timeList:dd_,
       value: 12,
       value1: 0,
@@ -135,7 +135,8 @@ export default {
       currentPage: 1,
       pageSize: 50,
       resultList: [],
-      dataObj: null
+      dataObj: null,
+			qqList:[]
     };
   },
   watch:{
@@ -148,6 +149,17 @@ export default {
     }
   },
   methods: {
+		//滑块变化
+			onChange(){
+				// console.log(this.util.dateFormat("", "YYYY-MM-DD")+" "+this.value)
+				if(!this.qqList){
+					window.pushApp.todaySteps.func(this.util.dateFormat("", "YYYY-MM-DD")+" "+this.value)
+					console.log(this.value+'今日无数据')
+				}else if(this.qqList[this.value].length ==0 || this.qqList[this.value] == 0 || this.qqList[this.value] == null){
+					window.pushApp.todaySteps.func(this.util.dateFormat("", "YYYY-MM-DD")+" "+this.value)
+					console.log(this.value+'此时无数据')
+				}
+			},
       openNavigator(){
           window.pushApp.openNavigator.func("setTarget")
       },
@@ -158,17 +170,26 @@ export default {
          this.$refs.myDate.addD()
       },
      getDayData(opt_date) {
-        if(opt_date==this.util.dateFormat("", "YYYY-MM-DD")){            
-            window.pushApp.todaySteps.func();
-            return ;
-        }
+        // if(opt_date==this.util.dateFormat("", "YYYY-MM-DD")){            
+        //     window.pushApp.todaySteps.func();
+        //     return ;
+        // }
         this.Http(this.api["StepDay"], {
           currentPage: this.currentPage,
           pageSize: this.pageSize,
           dateString: opt_date
         }).then(res => {
+					console.log('请求后台')
           if (res.data.code == "000") {
-              this.resultList = res.data.result.list??[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+              this.resultList = res.data.result.list??[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]	
+							this.qqList = res.data.result.list
+							console.log(res.data)
+							// for(let i in res.data.result.list){
+							// 	// console.log(i)
+							// 	if(res.data.result.list[i].length == 0 || res.data.result.list[i] == null){
+							// 		window.pushApp.todaySteps.func(this.util.dateFormat("", "YYYY-MM-DD")+" "+i)
+							// 	}
+							// }
               this.dataObj = res.data.result.obj??null
               this.value1_ = this.dataObj?.percent || 0
               this.value1 = (this.dataObj?.percent || 0)>100?100:(this.dataObj?.percent || 0)
@@ -182,9 +203,11 @@ export default {
         })
     },
     clickConten() {
+			// window.pushApp.todaySteps.func(this.util.dateFormat("", "YYYY-MM-DD")+" "+this.value)
       this.myDateState = true;
     },
     clickDay(data){
+			console.log(123)
       this.dateTime = data.replace("-","年").replace("-","月")+"日"
       // this.dateTime = data.replace("-",window.lang.year).replace("-",window.lang.month)+window.lang.day
       this.getDayData(data)
@@ -242,25 +265,28 @@ export default {
         dataIndex: this.value 
       });
     },1000)
+		window.pushApp.todaySteps.func(this.util.dateFormat("", "YYYY-MM-DD")+" "+this.value)
+		// console.log(this.util.dateFormat("", "YYYY-MM-DD")+" "+this.value)
+		this.getDayData(this.util.dateFormat("", "YYYY-MM-DD"))
     let that = this;  
-    setTimeout(() => {
-        window.pushApp.todaySteps.callback = (data)=>{  
-            console.log("todaySteps结果 : " + data)
-            let jsos_ = JSON.parse(data)            
-            that.resultList = jsos_["result"]["list"]??[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-            that.dataObj = jsos_["result"]["obj"]??null
-            that.value1_ = that.dataObj?.percent || 0
-            that.value1 = (that.dataObj?.percent || 0)>=100?100:(that.dataObj?.percent || 0)
-            opt.series[0].data = that.resultList
-            that.myChart.setOption(opt) 
-            setTimeout(() => {
-                that.myChart.resize();
-            }, 100);
+    // setTimeout(() => {
+    //     window.pushApp.todaySteps.callback = (data)=>{  
+    //         console.log("todaySteps结果 : " + data)
+    //         let jsos_ = JSON.parse(data)            
+    //         that.resultList = jsos_["result"]["list"]??[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+    //         that.dataObj = jsos_["result"]["obj"]??null
+    //         that.value1_ = that.dataObj?.percent || 0
+    //         that.value1 = (that.dataObj?.percent || 0)>=100?100:(that.dataObj?.percent || 0)
+    //         opt.series[0].data = that.resultList
+    //         that.myChart.setOption(opt) 
+    //         setTimeout(() => {
+    //             that.myChart.resize();
+    //         }, 100);
             
-        } 
-        console.log("调用 todaySteps :等待结果.... ")
-        window.pushApp.todaySteps.func()
-    },200)
+    //     } 
+    //     console.log("调用 todaySteps :等待结果.... ")
+    //     // window.pushApp.todaySteps.func()
+    // },200)
 
    
    
