@@ -5,7 +5,8 @@
       <span>{{timeList[value]}}</span>
     </div>
     <div class="page-step">
-      <span class="page-step-1">{{resultList.length>0?resultList[value]:"--"}}</span>
+      <span class="page-step-1" v-if="listSow">{{resultList.length>0?resultList[value]:"--"}}</span>
+			<span class="page-step-1" v-else>{{resultList.length>0?resultList[0]:"--"}}</span>
       <span class="page-step-2">{{lang.step}}</span>
     </div>
     <div class="img-view">
@@ -26,7 +27,7 @@
           <span :class="{'slider-action':value==6}">06:00</span>
           <span style="padding-left: 10px; box-sizing: border-box;" :class="{'slider-action':value==12}">12:00</span>
           <span style="padding-left: 18px;box-sizing: border-box;" :class="{'slider-action':value==18}">18:00</span>
-          <span :class="{'slider-action':value==23}">00:00</span>
+          <span :class="{'slider-action':value==23}">23:00</span>
         </div>
         <div style="width:100%;background: rgb(251, 155, 6);height: 2px;" class="van-slider_diy">
              <van-slider style="width:80%;margin: 0 auto;" v-model="value" max=23 min=0 :step="1" inactive-color="#FB9B06" active-color="#FB9B06" @change="onChange" />
@@ -136,7 +137,11 @@ export default {
       pageSize: 50,
       resultList: [],
       dataObj: null,
-			qqList:[]
+			qqList:'',
+			timeD:'',
+			listSow:true,
+			date:'',
+			datashow:true
     };
   },
   watch:{
@@ -151,14 +156,20 @@ export default {
   methods: {
 		//滑块变化
 			onChange(){
-				// console.log(this.util.dateFormat("", "YYYY-MM-DD")+" "+this.value)
-				if(!this.qqList){
-					window.pushApp.todaySteps.func(this.util.dateFormat("", "YYYY-MM-DD")+" "+this.value)
-					console.log(this.value+'今日无数据')
-				}else if(this.qqList[this.value].length ==0 || this.qqList[this.value] == 0 || this.qqList[this.value] == null){
-					window.pushApp.todaySteps.func(this.util.dateFormat("", "YYYY-MM-DD")+" "+this.value)
-					console.log(this.value+'此时无数据')
+				console.log(this.value)
+				if(this.datashow){
+					this.date = this.util.dateFormat("", "YYYY-MM-DD")
 				}
+				console.log(this.qqList)
+				window.pushApp.todaySteps.func(this.date+" "+this.value)
+				// if(!this.qqList){
+				// 	window.pushApp.todaySteps.func(this.date+" "+this.value)
+				// 	console.log(this.value+'今日无数据')
+				// }
+				// else if(this.qqList[this.value].length ==0 || this.qqList[this.value] == 0 || this.qqList[this.value] == null){
+				// 	window.pushApp.todaySteps.func(this.date+" "+this.value)
+				// 	console.log(this.value+'此时无数据')
+				// }
 			},
       openNavigator(){
           window.pushApp.openNavigator.func("setTarget")
@@ -183,17 +194,12 @@ export default {
           if (res.data.code == "000") {
               this.resultList = res.data.result.list??[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]	
 							this.qqList = res.data.result.list
-							console.log(res.data)
-							// for(let i in res.data.result.list){
-							// 	// console.log(i)
-							// 	if(res.data.result.list[i].length == 0 || res.data.result.list[i] == null){
-							// 		window.pushApp.todaySteps.func(this.util.dateFormat("", "YYYY-MM-DD")+" "+i)
-							// 	}
-							// }
               this.dataObj = res.data.result.obj??null
               this.value1_ = this.dataObj?.percent || 0
               this.value1 = (this.dataObj?.percent || 0)>100?100:(this.dataObj?.percent || 0)
               opt.series[0].data = this.resultList
+							opt.xAxis.axisLabel.show = false
+							opt.yAxis.axisLabel.show = false
               console.log(opt);
               this.myChart.setOption(opt)
           }
@@ -207,10 +213,17 @@ export default {
       this.myDateState = true;
     },
     clickDay(data){
-			console.log(123)
+			this.date = data
+			this.datashow = false
+			this.value = 12
+			console.log(this.value)
       this.dateTime = data.replace("-","年").replace("-","月")+"日"
       // this.dateTime = data.replace("-",window.lang.year).replace("-",window.lang.month)+window.lang.day
-      this.getDayData(data)
+			this.myChart.clear()
+      // this.getDayData(data)
+			// console.log(data)
+			window.pushApp.todaySteps.func(data+" "+12)
+			this.myChart.resize();
     },
     addData(dayHour){
       this.Http(this.api["StepSave"], [{
@@ -244,6 +257,9 @@ export default {
     this.myChart = this.$echarts.init(
       document.getElementById("code-echart-day")
     );
+		// opt.series[0].data = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]	
+		// opt.xAxis.axisLabel.show = false
+		// opt.yAxis.axisLabel.show = false
     this.myChart.setOption(opt);
     // this.getDayData(this.util.dateFormat("", "YYYY-MM-DD"))
     if(localStorage.userIndex!=1){
@@ -256,6 +272,10 @@ export default {
         window.curInt = params.dataIndex;
         this.myChart.setOption(opt)
         this.value = params.dataIndex;
+				if(this.datashow){
+					this.date = this.util.dateFormat("", "YYYY-MM-DD")
+				}
+				window.pushApp.todaySteps.func(this.date+" "+this.value)
       }
     })
     setTimeout(()=>{
@@ -266,27 +286,29 @@ export default {
       });
     },1000)
 		window.pushApp.todaySteps.func(this.util.dateFormat("", "YYYY-MM-DD")+" "+this.value)
-		// console.log(this.util.dateFormat("", "YYYY-MM-DD")+" "+this.value)
 		this.getDayData(this.util.dateFormat("", "YYYY-MM-DD"))
     let that = this;  
-    // setTimeout(() => {
-    //     window.pushApp.todaySteps.callback = (data)=>{  
-    //         console.log("todaySteps结果 : " + data)
-    //         let jsos_ = JSON.parse(data)            
-    //         that.resultList = jsos_["result"]["list"]??[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-    //         that.dataObj = jsos_["result"]["obj"]??null
-    //         that.value1_ = that.dataObj?.percent || 0
-    //         that.value1 = (that.dataObj?.percent || 0)>=100?100:(that.dataObj?.percent || 0)
-    //         opt.series[0].data = that.resultList
-    //         that.myChart.setOption(opt) 
-    //         setTimeout(() => {
-    //             that.myChart.resize();
-    //         }, 100);
+    setTimeout(() => {
+        window.pushApp.todaySteps.callback = (data)=>{  
+            console.log("todaySteps结果 : " + data)
+            let jsos_ = JSON.parse(data)            
+            // that.resultList = jsos_["result"]["list"]??[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+						that.resultList[that.value] = jsos_["result"]["list"][0]
+            that.dataObj = jsos_["result"]["obj"]??null
+            that.value1_ = that.dataObj?.percent || 0
+            that.value1 = (that.dataObj?.percent || 0)>=100?100:(that.dataObj?.percent || 0)
+            opt.series[0].data = that.resultList
+						opt.xAxis.axisLabel.show = false
+						opt.yAxis.axisLabel.show = false
+            that.myChart.setOption(opt) 
+            setTimeout(() => {
+                that.myChart.resize();
+            }, 100);
             
-    //     } 
-    //     console.log("调用 todaySteps :等待结果.... ")
-    //     // window.pushApp.todaySteps.func()
-    // },200)
+        } 
+        console.log("调用 todaySteps :等待结果.... ")
+        // window.pushApp.todaySteps.func()
+    },200)
 
    
    
